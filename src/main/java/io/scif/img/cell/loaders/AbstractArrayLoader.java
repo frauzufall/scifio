@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -79,8 +79,8 @@ public abstract class AbstractArrayLoader<A> implements SCIFIOArrayLoader<A> {
 		this.reader = reader;
 		this.subRegion = subRegion;
 		reader.getContext().inject(this);
-		final RealType<?> inputType =
-			imgUtilityService.makeType(reader.getMetadata().get(0).getPixelType());
+		final RealType<?> inputType = imgUtilityService.makeType(reader
+			.getMetadata().get(0).getPixelType());
 		compatible = outputClass().isAssignableFrom(inputType.getClass());
 	}
 
@@ -95,15 +95,14 @@ public abstract class AbstractArrayLoader<A> implements SCIFIOArrayLoader<A> {
 	{
 		ColorTable ct = getTable(imageIndex, planeIndex);
 		if (ct == null && !loadedTable()[imageIndex][planeIndex]) {
-			final long[] planeMin =
-				new long[reader.getMetadata().get(imageIndex).getAxesPlanar().size()];
+			final long[] planeMin = new long[reader.getMetadata().get(imageIndex)
+				.getAxesPlanar().size()];
 			final long[] planeMax = new long[planeMin.length];
 			for (int i = 0; i < planeMax.length; i++)
 				planeMax[i] = 1;
 
-			ct =
-				reader.openPlane(imageIndex, planeIndex, planeMin, planeMax)
-					.getColorTable();
+			ct = reader.openPlane(imageIndex, planeIndex, planeMin, planeMax)
+				.getColorTable();
 
 			addTable(imageIndex, planeIndex, ct);
 		}
@@ -151,8 +150,8 @@ public abstract class AbstractArrayLoader<A> implements SCIFIOArrayLoader<A> {
 				// otherwise just make a straightforward range spanning the
 				// passed
 				// dimensional constraints
-				npRanges[axisIndex] =
-					new Range(min[index], min[index] + dimensions[index] - 1);
+				npRanges[axisIndex] = new Range(min[index], min[index] +
+					dimensions[index] - 1);
 
 				if (subRegion != null) {
 					entities *= subRegion.getRange(axis.type()).size();
@@ -216,13 +215,13 @@ public abstract class AbstractArrayLoader<A> implements SCIFIOArrayLoader<A> {
 			}
 		}
 		else if (inSubregion(npIndices)) {
-			final int planeIndex =
-				(int) FormatTools.positionToRaster(0, reader, npIndices);
+			final int planeIndex = (int) FormatTools.positionToRaster(0, reader,
+				npIndices);
 
-			if (tmpPlane == null) tmpPlane =
-				reader.openPlane(index, planeIndex, planarMin, planarLength);
-			else tmpPlane =
-				reader.openPlane(index, planeIndex, tmpPlane, planarMin, planarLength);
+			if (tmpPlane == null) tmpPlane = reader.openPlane(index, planeIndex,
+				planarMin, planarLength);
+			else tmpPlane = reader.openPlane(index, planeIndex, tmpPlane, planarMin,
+				planarLength);
 			convertBytes(data, tmpPlane.getBytes(), planeCount);
 
 			// update color table
@@ -236,8 +235,8 @@ public abstract class AbstractArrayLoader<A> implements SCIFIOArrayLoader<A> {
 	private boolean[][] loadedTable() {
 		if (loadedTable == null) {
 			final Metadata m = reader.getMetadata();
-			loadedTable =
-				new boolean[m.getImageCount()][(int) m.get(0).getPlaneCount()];
+			loadedTable = new boolean[m.getImageCount()][(int) m.get(0)
+				.getPlaneCount()];
 		}
 		return loadedTable;
 	}
@@ -307,9 +306,8 @@ public abstract class AbstractArrayLoader<A> implements SCIFIOArrayLoader<A> {
 			for (final CalibratedAxis axis : reader.getMetadata().get(0)
 				.getAxesNonPlanar())
 			{
-				inSubregion =
-					inSubregion &&
-						inRange(subRegion.getRange(axis.type()), npIndices[index++]);
+				inSubregion = inSubregion && inRange(subRegion.getRange(axis.type()),
+					npIndices[index++]);
 			}
 		}
 

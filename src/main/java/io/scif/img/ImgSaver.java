@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -152,7 +152,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 	 * @throws IncompatibleTypeException
 	 */
 	public Metadata saveImg(final String id, final Img<?> img,
-		final SCIFIOConfig config) throws ImgIOException, IncompatibleTypeException
+		final SCIFIOConfig config) throws ImgIOException,
+		IncompatibleTypeException
 	{
 		return saveImg(id, utils().makeSCIFIOImgPlus(img), 0, config);
 	}
@@ -217,7 +218,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 	 * @throws IncompatibleTypeException
 	 */
 	public void saveImg(final Writer w, final Img<?> img,
-		final SCIFIOConfig config) throws ImgIOException, IncompatibleTypeException
+		final SCIFIOConfig config) throws ImgIOException,
+		IncompatibleTypeException
 	{
 		saveImg(w, utils().makeSCIFIOImgPlus(img), 0, config);
 	}
@@ -451,9 +453,9 @@ public class ImgSaver extends AbstractImgIOComponent {
 		if (w == null) {
 			if (id == null || id.length() == 0) {
 				throw new ImgIOException(
-					"No output destination or pre-configured Writer was provided, and"
-						+ " no way to determine the desired output path. Default value:"
-						+ " ImgPlus's source.");
+					"No output destination or pre-configured Writer was provided, and" +
+						" no way to determine the desired output path. Default value:" +
+						" ImgPlus's source.");
 			}
 			return writeImg(id, img, imageIndex, config, sliceCount);
 		}
@@ -508,8 +510,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 		if (w.getMetadata() == null) {
 			if (id == null || id.length() == 0) {
 				throw new ImgIOException(
-					"A Writer with no Metadata was provided, with no way to determine "
-						+ "the desired output path. Default value: ImgPlus's source.");
+					"A Writer with no Metadata was provided, with no way to determine " +
+						"the desired output path. Default value: ImgPlus's source.");
 			}
 			try {
 				populateMeta(w, imgPlus, config, id, imageIndex);
@@ -544,8 +546,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 			final long endTime = System.currentTimeMillis();
 			final float time = (endTime - startTime) / 1000f;
 			statusService.showStatus(sliceCount, sliceCount, w.getMetadata()
-				.getDatasetName() +
-				": wrote " + sliceCount + " planes in " + time + " s");
+				.getDatasetName() + ": wrote " + sliceCount + " planes in " + time +
+				" s");
 		}
 
 		return w.getMetadata();
@@ -584,11 +586,10 @@ public class ImgSaver extends AbstractImgIOComponent {
 		final Metadata mOut = w.getMetadata();
 		validate(mOut, w);
 
-		final int rgbChannelCount =
-			mOut.get(imageIndex).isMultichannel() ? (int) mOut.get(imageIndex)
-				.getAxisLength(Axes.CHANNEL) : 1;
-		final boolean interleaved =
-			mOut.get(imageIndex).getInterleavedAxisCount() > 0;
+		final int rgbChannelCount = mOut.get(imageIndex).isMultichannel()
+			? (int) mOut.get(imageIndex).getAxisLength(Axes.CHANNEL) : 1;
+		final boolean interleaved = mOut.get(imageIndex)
+			.getInterleavedAxisCount() > 0;
 
 		byte[] sourcePlane = null;
 
@@ -601,7 +602,7 @@ public class ImgSaver extends AbstractImgIOComponent {
 			// Warn that some planes were truncated (e.g. going from 4D format to 3D)
 			statusService.showStatus(0, 0, "Source dataset contains: " + planeCount +
 				" planes, but writer format only supports: " + rgbChannelCount *
-				planeOutCount, true);
+					planeOutCount, true);
 		}
 
 		for (int planeIndex = 0; planeIndex < planeOutCount; planeIndex++) {
@@ -611,18 +612,16 @@ public class ImgSaver extends AbstractImgIOComponent {
 			try {
 				final Metadata meta = w.getMetadata();
 
-				final long[] planarLengths =
-					meta.get(imageIndex).getAxesLengthsPlanar();
-				final long[] planarMin =
-					SCIFIOMetadataTools.modifyPlanar(imageIndex, meta,
-						new long[planarLengths.length]);
-				final ByteArrayPlane destPlane =
-					new ByteArrayPlane(getContext(), meta.get(imageIndex), planarMin,
-						planarLengths);
+				final long[] planarLengths = meta.get(imageIndex)
+					.getAxesLengthsPlanar();
+				final long[] planarMin = SCIFIOMetadataTools.modifyPlanar(imageIndex,
+					meta, new long[planarLengths.length]);
+				final ByteArrayPlane destPlane = new ByteArrayPlane(getContext(), meta
+					.get(imageIndex), planarMin, planarLengths);
 
 				for (int cIndex = 0; cIndex < rgbChannelCount; cIndex++) {
-					final Object curPlane =
-						getPlaneArray(img, rgbChannelCount, cIndex, planeIndex);
+					final Object curPlane = getPlaneArray(img, rgbChannelCount, cIndex,
+						planeIndex);
 
 					final Class<?> planeClass = curPlane.getClass();
 
@@ -651,8 +650,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 					}
 
 					if (interleaved) {
-						final int bpp =
-							FormatTools.getBytesPerPixel(meta.get(imageIndex).getPixelType());
+						final int bpp = FormatTools.getBytesPerPixel(meta.get(imageIndex)
+							.getPixelType());
 
 						// TODO: Assign all elements in a for loop rather than
 						// using many small System.arraycopy calls. Calling
@@ -662,8 +661,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 						// less).
 						// See: http://stackoverflow.com/a/12366983
 						for (int i = 0; i < sourcePlane.length / bpp; i += bpp) {
-							System.arraycopy(sourcePlane, i, destPlane.getData(),
-								((i * rgbChannelCount) + cIndex) * bpp, bpp);
+							System.arraycopy(sourcePlane, i, destPlane.getData(), ((i *
+								rgbChannelCount) + cIndex) * bpp, bpp);
 						}
 					}
 					else {
@@ -729,52 +728,50 @@ public class ImgSaver extends AbstractImgIOComponent {
 			if (store instanceof ByteArray) {
 				final byte[] source = ((ByteArray) store).getCurrentStorageArray();
 				final byte[] bytes = new byte[planeSize];
-				System.arraycopy(source, planeSize *
-					(cIndex + (planeIndex * rgbChannelCount)), bytes, 0, bytes.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), bytes, 0, bytes.length);
 				return bytes;
 			}
 			else if (store instanceof ShortArray) {
 				final short[] source = ((ShortArray) store).getCurrentStorageArray();
 				final short[] shorts = new short[planeSize];
-				System.arraycopy(source, planeSize *
-					(cIndex + (planeIndex * rgbChannelCount)), shorts, 0, shorts.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), shorts, 0, shorts.length);
 				return shorts;
 			}
 			else if (store instanceof LongArray) {
 				final long[] source = ((LongArray) store).getCurrentStorageArray();
 				final long[] longs = new long[planeSize];
-				System.arraycopy(source, planeSize *
-					(cIndex + (planeIndex * rgbChannelCount)), longs, 0, longs.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), longs, 0, longs.length);
 				return longs;
 			}
 			else if (store instanceof CharArray) {
 				final char[] source = ((CharArray) store).getCurrentStorageArray();
 				final char[] chars = new char[planeSize];
-				System.arraycopy(source, planeSize *
-					(cIndex + (planeIndex * rgbChannelCount)), chars, 0, chars.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), chars, 0, chars.length);
 				return chars;
 			}
 			else if (store instanceof DoubleArray) {
 				final double[] source = ((DoubleArray) store).getCurrentStorageArray();
 				final double[] doubles = new double[planeSize];
-				System
-					.arraycopy(source, planeSize *
-						(cIndex + (planeIndex * rgbChannelCount)), doubles, 0,
-						doubles.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), doubles, 0, doubles.length);
 				return doubles;
 			}
 			else if (store instanceof FloatArray) {
 				final float[] source = ((FloatArray) store).getCurrentStorageArray();
 				final float[] floats = new float[planeSize];
-				System.arraycopy(source, planeSize *
-					(cIndex + (planeIndex * rgbChannelCount)), floats, 0, floats.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), floats, 0, floats.length);
 				return floats;
 			}
 			else if (store instanceof IntArray) {
 				final int[] source = ((IntArray) store).getCurrentStorageArray();
 				final int[] ints = new int[planeSize];
-				System.arraycopy(source, planeSize *
-					(cIndex + (planeIndex * rgbChannelCount)), ints, 0, ints.length);
+				System.arraycopy(source, planeSize * (cIndex + (planeIndex *
+					rgbChannelCount)), ints, 0, ints.length);
 				return ints;
 			}
 		}
@@ -828,10 +825,11 @@ public class ImgSaver extends AbstractImgIOComponent {
 
 		// Create a cursor and move it to the first position of the requested
 		// plane
-		RandomAccess<?> randomAccess = img.randomAccess();
+		final RandomAccess<?> randomAccess = img.randomAccess();
 		randomAccess.setPosition(dimensions);
 
-		//TODO jump ahead to the requested channel? Not sure if that is needed or not..
+		// TODO jump ahead to the requested channel? Not sure if that is needed or
+		// not..
 
 		// Iterate over the positions in this plane, copying the values at
 		// each position to the output array.
@@ -933,8 +931,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 		img.dimensions(axisLengths);
 
 		for (final ImageMetadata iMeta : imageMeta) {
-			iMeta.populate(img.getName(), Arrays.asList(axes), axisLengths,
-				pixelType, true, false, false, false, true);
+			iMeta.populate(img.getName(), Arrays.asList(axes), axisLengths, pixelType,
+				true, false, false, false, true);
 
 			// Adjust for RGB information
 			if (img.getCompositeChannelCount() > 1) {
@@ -943,11 +941,11 @@ public class ImgSaver extends AbstractImgIOComponent {
 				}
 				iMeta.setAxisType(2, Axes.CHANNEL);
 				// Split Axes.CHANNEL if necessary
-				if (iMeta.getAxisLength(Axes.CHANNEL) > img.getCompositeChannelCount())
+				if (iMeta.getAxisLength(Axes.CHANNEL) > img
+					.getCompositeChannelCount())
 				{
-					iMeta.addAxis(Axes.get("Channel-planes", false), iMeta
-						.getAxisLength(Axes.CHANNEL) /
-						img.getCompositeChannelCount());
+					iMeta.addAxis(Axes.get("Channel-planes", false), iMeta.getAxisLength(
+						Axes.CHANNEL) / img.getCompositeChannelCount());
 					iMeta.setAxisLength(Axes.CHANNEL, img.getCompositeChannelCount());
 				}
 			}

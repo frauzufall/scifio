@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -51,8 +51,8 @@ import net.imglib2.util.Fraction;
  * @author Mark Hiner
  */
 public class SCIFIOCellImg<T extends NativeType<T>, A extends ArrayDataAccess<A>>
-	extends AbstractCellImg<T, A, SCIFIOCell<A>, LazyCells<SCIFIOCell<A>>> implements
-	Disposable
+	extends AbstractCellImg<T, A, SCIFIOCell<A>, LazyCells<SCIFIOCell<A>>>
+	implements Disposable
 {
 
 	// -- Fields --
@@ -88,8 +88,8 @@ public class SCIFIOCellImg<T extends NativeType<T>, A extends ArrayDataAccess<A>
 	{
 		if (loader != null) return loader.loadTable(imageIndex, planeIndex);
 
-		final long[] planeMin =
-			new long[reader.getMetadata().get(imageIndex).getAxesPlanar().size()];
+		final long[] planeMin = new long[reader.getMetadata().get(imageIndex)
+			.getAxesPlanar().size()];
 		final long[] planeMax = new long[planeMin.length];
 		for (int i = 0; i < planeMax.length; i++)
 			planeMax[i] = 1;
@@ -114,9 +114,8 @@ public class SCIFIOCellImg<T extends NativeType<T>, A extends ArrayDataAccess<A>
 	@Override
 	public SCIFIOCellImg<T, A> copy() {
 		@SuppressWarnings("unchecked")
-		final SCIFIOCellImg<T, A> copy =
-			(SCIFIOCellImg<T, A>) factory().create(dimension,
-				firstElement().createVariable());
+		final SCIFIOCellImg<T, A> copy = (SCIFIOCellImg<T, A>) factory().create(
+			dimension, firstElement().createVariable());
 		super.copyDataTo(copy);
 		return copy;
 	}

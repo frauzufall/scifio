@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -128,8 +128,8 @@ public class ChannelFiller extends AbstractReaderFilter {
 		final SCIFIOConfig config) throws FormatException, IOException
 	{
 		final int planarAxes = getMetadata().get(imageIndex).getPlanarAxisCount();
-		return openPlane(imageIndex, planeIndex, new long[planarAxes],
-			getMetadata().get(imageIndex).getAxesLengthsPlanar(), config);
+		return openPlane(imageIndex, planeIndex, new long[planarAxes], getMetadata()
+			.get(imageIndex).getAxesLengthsPlanar(), config);
 	}
 
 	@Override
@@ -158,17 +158,16 @@ public class ChannelFiller extends AbstractReaderFilter {
 	{
 		// If the wrapped Metadata wasn't indexed, we can use the parent reader
 		// directly
-		if (getParentMeta().get(imageIndex).isFalseColor() ||
-			!getParentMeta().get(imageIndex).isIndexed())
+		if (getParentMeta().get(imageIndex).isFalseColor() || !getParentMeta().get(
+			imageIndex).isIndexed())
 		{
 			if (!haveCached(imageIndex, planeIndex, offsets, lengths)) {
 				lastPlaneOffsets = Arrays.copyOf(offsets, offsets.length);
 				lastPlaneLengths = Arrays.copyOf(lengths, lengths.length);
 				lastPlaneIndex = planeIndex;
 				lastImageIndex = imageIndex;
-				lastPlane =
-					getParent().openPlane(imageIndex, planeIndex, plane, offsets,
-						lengths, config);
+				lastPlane = getParent().openPlane(imageIndex, planeIndex, plane,
+					offsets, lengths, config);
 			}
 			return lastPlane;
 		}
@@ -176,16 +175,15 @@ public class ChannelFiller extends AbstractReaderFilter {
 		// If we have the cached base plane we can use it to expand, otherwise
 		// we'll
 		// have to open the plane still.
-		final int lutLength =
-			((ChannelFillerMetadata) getMetadata()).getLutLength();
+		final int lutLength = ((ChannelFillerMetadata) getMetadata())
+			.getLutLength();
 
 		if (!haveCached(imageIndex, planeIndex, offsets, lengths)) {
 			updateLastPlaneInfo(imageIndex, lutLength, offsets, lengths);
 
 			// Now we can read the desired plane
-			lastPlane =
-				getParent().openPlane(imageIndex, planeIndex, lastPlaneOffsets,
-					lastPlaneLengths, config);
+			lastPlane = getParent().openPlane(imageIndex, planeIndex,
+				lastPlaneOffsets, lastPlaneLengths, config);
 			lastPlaneIndex = planeIndex;
 			lastImageIndex = imageIndex;
 			lastPlaneOffsets = Arrays.copyOf(offsets, offsets.length);
@@ -194,27 +192,26 @@ public class ChannelFiller extends AbstractReaderFilter {
 
 		// Make sure we have a compatible plane type
 		if (!ByteArrayPlane.class.isAssignableFrom(plane.getClass())) {
-			plane =
-				new ByteArrayPlane(getContext(), getMetadata().get(imageIndex),
-					offsets, lengths);
+			plane = new ByteArrayPlane(getContext(), getMetadata().get(imageIndex),
+				offsets, lengths);
 		}
 
 		final byte[] buf = plane.getBytes();
 		int pt = 0;
 
-		final int bytesPerIndex =
-			getParentMeta().get(imageIndex).getBitsPerPixel() / 8;
+		final int bytesPerIndex = getParentMeta().get(imageIndex)
+			.getBitsPerPixel() / 8;
 
 		final ColorTable lut = lastPlane.getColorTable();
 		final byte[] index = lastPlane.getBytes();
 
 		// Expand the index values to fill the buffer
 		if (getMetadata().get(imageIndex).getInterleavedAxisCount() > 0) {
-			for (int i = 0; i < index.length / bytesPerIndex && pt < buf.length; i++)
+			for (int i = 0; i < index.length / bytesPerIndex &&
+				pt < buf.length; i++)
 			{
-				final int iVal =
-					Bytes.toInt(index, i * bytesPerIndex, bytesPerIndex,
-						getMetadata().get(imageIndex).isLittleEndian());
+				final int iVal = Bytes.toInt(index, i * bytesPerIndex, bytesPerIndex,
+					getMetadata().get(imageIndex).isLittleEndian());
 				for (int j = 0; j < lutLength; j++) {
 					buf[pt++] = (byte) lut.get(j, iVal);
 				}
@@ -222,11 +219,11 @@ public class ChannelFiller extends AbstractReaderFilter {
 		}
 		else {
 			for (int j = 0; j < lutLength; j++) {
-				for (int i = 0; i < index.length / bytesPerIndex && pt < buf.length; i++)
+				for (int i = 0; i < index.length / bytesPerIndex &&
+					pt < buf.length; i++)
 				{
-					final int iVal =
-						Bytes.toInt(index, i * bytesPerIndex, bytesPerIndex,
-							getMetadata().get(imageIndex).isLittleEndian());
+					final int iVal = Bytes.toInt(index, i * bytesPerIndex, bytesPerIndex,
+						getMetadata().get(imageIndex).isLittleEndian());
 					buf[pt++] = (byte) lut.get(j, iVal);
 				}
 			}
@@ -241,8 +238,8 @@ public class ChannelFiller extends AbstractReaderFilter {
 
 	/* lutLength is 0 until a plane is opened */
 	@Override
-	protected void
-		setSourceHelper(final String source, final SCIFIOConfig config)
+	protected void setSourceHelper(final String source,
+		final SCIFIOConfig config)
 	{
 		try {
 			cleanUp();
@@ -298,10 +295,8 @@ public class ChannelFiller extends AbstractReaderFilter {
 				// Make sure we have the starting point in each axis
 				matches = matches && offsets[i] == lastPlaneOffsets[i];
 				// make sure we have the last positions in each axis
-				matches =
-					matches &&
-						offsets[i] + lengths[i] == lastPlaneOffsets[i] +
-							lastPlaneLengths[i];
+				matches = matches && offsets[i] + lengths[i] == lastPlaneOffsets[i] +
+					lastPlaneLengths[i];
 			}
 		}
 		else {

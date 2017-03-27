@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -238,8 +238,8 @@ public class FakeFormat extends AbstractFormat {
 		 * Returns the current color table for this dataset
 		 */
 		@Override
-		public ColorTable
-			getColorTable(final int imageIndex, final long planeIndex)
+		public ColorTable getColorTable(final int imageIndex,
+			final long planeIndex)
 		{
 
 			return luts == null ? null : luts[imageIndex][(int) planeIndex];
@@ -252,22 +252,20 @@ public class FakeFormat extends AbstractFormat {
 		 */
 		@Override
 		public void populateImageMetadata() {
-			final MetadataService metadataService =
-				getContext().getService(MetadataService.class);
+			final MetadataService metadataService = getContext().getService(
+				MetadataService.class);
 
 			setDefaults();
 
 			// parse key/value pairs from fake filename
-			final Map<String, Object> fakeMap =
-				FakeUtils.extractFakeInfo(metadataService, getDatasetName());
+			final Map<String, Object> fakeMap = FakeUtils.extractFakeInfo(
+				metadataService, getDatasetName());
 
 			metadataService.populate(this, fakeMap);
 
 			if (axes.length != lengths.length) {
-				throw new IllegalStateException(
-					"FakeFormat id: " +
-						getDatasetName() +
-						" is not valid. Can not have a differing number of axis types and axis lengths.");
+				throw new IllegalStateException("FakeFormat id: " + getDatasetName() +
+					" is not valid. Can not have a differing number of axis types and axis lengths.");
 			}
 
 			final int pType = FormatTools.pixelTypeFromString(pixelType);
@@ -284,8 +282,8 @@ public class FakeFormat extends AbstractFormat {
 				if (i < scales.length) {
 					scale = scales[i];
 				}
-				calibratedAxes[i] =
-					new DefaultLinearAxis(Axes.get(axes[i]), unit, scale);
+				calibratedAxes[i] = new DefaultLinearAxis(Axes.get(axes[i]), unit,
+					scale);
 			}
 
 			// Image metadata population
@@ -466,19 +464,17 @@ public class FakeFormat extends AbstractFormat {
 		// -- Reader API methods --
 
 		@Override
-		public ByteArrayPlane openPlane(final int imageIndex,
-			final long planeIndex, final ByteArrayPlane plane, final long[] planeMin,
-			final long[] planeMax, final SCIFIOConfig config) throws FormatException,
-			IOException
+		public ByteArrayPlane openPlane(final int imageIndex, final long planeIndex,
+			final ByteArrayPlane plane, final long[] planeMin, final long[] planeMax,
+			final SCIFIOConfig config) throws FormatException, IOException
 		{
 			final Metadata meta = getMetadata();
 			FormatTools.checkPlaneForReading(meta, imageIndex, planeIndex, plane
 				.getData().length, planeMin, planeMax);
 			plane.setImageMetadata(meta.get(imageIndex));
 
-			final long[] pos =
-				FormatTools.rasterToPosition(meta.get(imageIndex)
-					.getAxesLengthsNonPlanar(), planeIndex);
+			final long[] pos = FormatTools.rasterToPosition(meta.get(imageIndex)
+				.getAxesLengthsNonPlanar(), planeIndex);
 
 			final long[] planarIndices = new long[planeMin.length];
 
@@ -682,8 +678,8 @@ public class FakeFormat extends AbstractFormat {
 				.getInterleavedAxisCount());
 			FakeUtils.appendToken(fakeId, "thumbSizeX", iMeta.getThumbSizeX());
 			FakeUtils.appendToken(fakeId, "thumbSizeY", iMeta.getThumbSizeY());
-			FakeUtils.appendToken(fakeId, "pixelType", FormatTools
-				.getPixelTypeString(iMeta.getPixelType()));
+			FakeUtils.appendToken(fakeId, "pixelType", FormatTools.getPixelTypeString(
+				iMeta.getPixelType()));
 			FakeUtils.appendToken(fakeId, "falseColor", iMeta.isFalseColor());
 			FakeUtils.appendToken(fakeId, "little", iMeta.isLittleEndian());
 			FakeUtils.appendToken(fakeId, "metadataComplete", iMeta
@@ -693,8 +689,8 @@ public class FakeFormat extends AbstractFormat {
 			FakeUtils.appendToken(fakeId, "images", source.size());
 
 			if (iMeta.isIndexed()) {
-				final int lutLength =
-					((HasColorTable) source).getColorTable(0, 0).getComponentCount();
+				final int lutLength = ((HasColorTable) source).getColorTable(0, 0)
+					.getComponentCount();
 				FakeUtils.appendToken(fakeId, "indexed", iMeta.isIndexed());
 				FakeUtils.appendToken(fakeId, "lutLength", lutLength);
 			}
@@ -841,8 +837,8 @@ public class FakeFormat extends AbstractFormat {
 		/* Verifies two arrays are of the same size. */
 		private static void sizeCheck(final int[][] array1, final int[][] array2) {
 			if (array1.length != array2.length ||
-				array1[0].length != array2[0].length) throw new IllegalArgumentException(
-				"Arrays must be of the same size.");
+				array1[0].length != array2[0].length)
+				throw new IllegalArgumentException("Arrays must be of the same size.");
 		}
 	}
 }

@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -240,8 +240,8 @@ public class TIFFFormat extends AbstractFormat {
 		// -- HasColorTable API Methods --
 
 		@Override
-		public ColorTable
-			getColorTable(final int imageIndex, final long planeIndex)
+		public ColorTable getColorTable(final int imageIndex,
+			final long planeIndex)
 		{
 			final ColorTable ct = super.getColorTable(imageIndex, planeIndex);
 
@@ -268,9 +268,8 @@ public class TIFFFormat extends AbstractFormat {
 					// Otherwise, we need to determine which channel the given
 					// planeIndex
 					// corresponds to..
-					final int ctIndex =
-						(int) FormatTools.getNonPlanarAxisPosition(this, imageIndex,
-							planeIndex, Axes.CHANNEL);
+					final int ctIndex = (int) FormatTools.getNonPlanarAxisPosition(this,
+						imageIndex, planeIndex, Axes.CHANNEL);
 
 					return colorTable.get(ctIndex);
 				}
@@ -364,8 +363,8 @@ public class TIFFFormat extends AbstractFormat {
 			final boolean noPixels)
 		{
 			if (noPixels) {
-				return getMetadata().getCompanionFile() == null ? null
-					: new String[] { getMetadata().getCompanionFile() };
+				return getMetadata().getCompanionFile() == null ? null : new String[] {
+					getMetadata().getCompanionFile() };
 			}
 			if (getMetadata().getCompanionFile() != null) return new String[] {
 				getMetadata().getCompanionFile(), getSource().getFileName() };
@@ -399,15 +398,15 @@ public class TIFFFormat extends AbstractFormat {
 							for (int i = 0; i < b.length; i++) {
 								b[i] = (byte) s[i];
 							}
-							String metadata =
-								StringUtils.stripNulls(new String(b, Constants.ENCODING));
+							String metadata = StringUtils.stripNulls(new String(b,
+								Constants.ENCODING));
 							if (metadata.contains("xml")) {
 								metadata = metadata.substring(metadata.indexOf("<"));
-								metadata =
-									"<root>" + xmlService.sanitizeXML(metadata) + "</root>";
+								metadata = "<root>" + xmlService.sanitizeXML(metadata) +
+									"</root>";
 								try {
-									final Hashtable<String, String> xmlMetadata =
-										xmlService.parseXML(metadata);
+									final Hashtable<String, String> xmlMetadata = xmlService
+										.parseXML(metadata);
 									for (final String key : xmlMetadata.keySet()) {
 										table.put(key, xmlMetadata.get(key));
 									}
@@ -457,9 +456,8 @@ public class TIFFFormat extends AbstractFormat {
 
 			// check for another file with the same name
 			if (config.groupableIsGroupFiles()) {
-				final Location currentFile =
-					new Location(getContext(), getSource().getFileName())
-						.getAbsoluteFile();
+				final Location currentFile = new Location(getContext(), getSource()
+					.getFileName()).getAbsoluteFile();
 				final String currentName = currentFile.getName();
 				final Location directory = currentFile.getParentFile();
 				final String[] files = directory.list(true);
@@ -470,8 +468,8 @@ public class TIFFFormat extends AbstractFormat {
 							name = name.substring(0, name.indexOf("."));
 						}
 
-						if (currentName.startsWith(name) &&
-							FormatTools.checkSuffix(name, COMPANION_SUFFIXES))
+						if (currentName.startsWith(name) && FormatTools.checkSuffix(name,
+							COMPANION_SUFFIXES))
 						{
 							meta.setCompanionFile(new Location(getContext(), directory, file)
 								.getAbsolutePath());
@@ -497,10 +495,10 @@ public class TIFFFormat extends AbstractFormat {
 		private boolean checkCommentMetamorph(final Metadata meta,
 			final String comment)
 		{
-			final String software =
-				meta.getIfds().get(0).getIFDTextValue(IFD.SOFTWARE);
-			return comment != null && software != null &&
-				software.contains("MetaMorph");
+			final String software = meta.getIfds().get(0).getIFDTextValue(
+				IFD.SOFTWARE);
+			return comment != null && software != null && software.contains(
+				"MetaMorph");
 		}
 
 		private void parseCommentSCIFIO(final Metadata meta, final String comment) {
@@ -532,10 +530,10 @@ public class TIFFFormat extends AbstractFormat {
 				return;
 			}
 
-			for (int i=0; i<axes.length; i++) {
+			for (int i = 0; i < axes.length; i++) {
 				final AxisType type = Axes.get(axes[i]);
-				final String unit = (units[i] != null) ?
-					units[i].replace("\\u00B5", "µ") : null;
+				final String unit = (units[i] != null) ? units[i].replace("\\u00B5",
+					"µ") : null;
 				final double scale = Double.parseDouble(scales[i]);
 				final DefaultLinearAxis axis = new DefaultLinearAxis(type, unit, scale);
 				final int axisIndex = meta.get(0).getAxisIndex(type);
@@ -629,8 +627,7 @@ public class TIFFFormat extends AbstractFormat {
 			}
 
 			final ImageMetadata m = meta.get(0);
-			final Set<CalibratedAxis> predefinedAxes =
-				new HashSet<>(m.getAxes());
+			final Set<CalibratedAxis> predefinedAxes = new HashSet<>(m.getAxes());
 
 			m.setAxisTypes(Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME);
 
@@ -646,8 +643,8 @@ public class TIFFFormat extends AbstractFormat {
 				m.setAxisLength(Axes.TIME, t);
 				m.setAxisLength(Axes.CHANNEL, m.getAxisLength(Axes.CHANNEL) * c);
 			}
-			else if (ifds.size() == 1 && z * t > ifds.size() &&
-				ifds.get(0).getCompression() == TiffCompression.UNCOMPRESSED)
+			else if (ifds.size() == 1 && z * t > ifds.size() && ifds.get(0)
+				.getCompression() == TiffCompression.UNCOMPRESSED)
 			{
 				// file is likely corrupt (missing end IFDs)
 				//
@@ -664,16 +661,14 @@ public class TIFFFormat extends AbstractFormat {
 
 				final IFD firstIFD = ifds.get(0);
 
-				final int planeSize =
-					(int) (m.getAxisLength(Axes.X) * m.getAxisLength(Axes.Y) *
-						m.getAxisLength(Axes.CHANNEL) * FormatTools.getBytesPerPixel(m
-						.getPixelType()));
+				final int planeSize = (int) (m.getAxisLength(Axes.X) * m.getAxisLength(
+					Axes.Y) * m.getAxisLength(Axes.CHANNEL) * FormatTools
+						.getBytesPerPixel(m.getPixelType()));
 				final long[] stripOffsets = firstIFD.getStripOffsets();
 				final long[] stripByteCounts = firstIFD.getStripByteCounts();
 
-				final long endOfFirstPlane =
-					stripOffsets[stripOffsets.length - 1] +
-						stripByteCounts[stripByteCounts.length - 1];
+				final long endOfFirstPlane = stripOffsets[stripOffsets.length - 1] +
+					stripByteCounts[stripByteCounts.length - 1];
 				final long totalBytes = getSource().length() - endOfFirstPlane;
 				final int totalPlanes = (int) (totalBytes / planeSize) + 1;
 
@@ -684,9 +679,8 @@ public class TIFFFormat extends AbstractFormat {
 					ifds.add(ifd);
 					final long[] prevOffsets = ifds.get(i - 1).getStripOffsets();
 					final long[] offsets = new long[stripOffsets.length];
-					offsets[0] =
-						prevOffsets[prevOffsets.length - 1] +
-							stripByteCounts[stripByteCounts.length - 1];
+					offsets[0] = prevOffsets[prevOffsets.length - 1] +
+						stripByteCounts[stripByteCounts.length - 1];
 					for (int j = 1; j < offsets.length; j++) {
 						offsets[j] = offsets[j - 1] + stripByteCounts[j - 1];
 					}
@@ -709,8 +703,7 @@ public class TIFFFormat extends AbstractFormat {
 			}
 
 			// Clean up length 1 axes
-			final ArrayList<CalibratedAxis> validAxes =
-				new ArrayList<>();
+			final ArrayList<CalibratedAxis> validAxes = new ArrayList<>();
 
 			for (final CalibratedAxis axis : m.getAxes()) {
 				if (predefinedAxes.contains(axis) || m.getAxisLength(axis) > 1) {
@@ -771,9 +764,8 @@ public class TIFFFormat extends AbstractFormat {
 			int start = 1;
 			for (int i = 0; i < nTypes; i++) {
 				if (types[i] == LUTS) {
-					final byte[][] luts =
-						getLUTs(start, start + counts[i] - 1, metaDataCounts, imagejTags,
-							sPos);
+					final byte[][] luts = getLUTs(start, start + counts[i] - 1,
+						metaDataCounts, imagejTags, sPos);
 
 					meta.setLut(luts);
 				}
@@ -782,10 +774,9 @@ public class TIFFFormat extends AbstractFormat {
 					// per-plane
 					// metadata.
 					// DO NOT RELY ON THIS KEY.
-					meta.get(0).getTable().put(
-						"SliceLabels",
-						getSliceLabels(start, start + counts[i] - 1, metaDataCounts,
-							imagejTags, sPos, littleEndian));
+					meta.get(0).getTable().put("SliceLabels", getSliceLabels(start,
+						start + counts[i] - 1, metaDataCounts, imagejTags, sPos,
+						littleEndian));
 				}
 				else {
 					skipUnknownType(start, start + counts[i] - 1, metaDataCounts, sPos);
@@ -873,12 +864,13 @@ public class TIFFFormat extends AbstractFormat {
 			final int b3 = imageJTags[start[0]++];
 			final int b4 = imageJTags[start[0]++];
 
-			if (littleEndian) return ((b4 << 24) + (b3 << 16) + (b2 << 8) + (b1 << 0));
+			if (littleEndian) return ((b4 << 24) + (b3 << 16) + (b2 << 8) +
+				(b1 << 0));
 			return ((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
 		}
 
-		private void
-			parseCommentMetamorph(final Metadata meta, final String comment)
+		private void parseCommentMetamorph(final Metadata meta,
+			final String comment)
 		{
 			// parse key/value pairs
 			final StringTokenizer st = new StringTokenizer(comment, "\n");
@@ -1081,14 +1073,12 @@ public class TIFFFormat extends AbstractFormat {
 			String fillOrder = null;
 			switch (fill) {
 				case 1:
-					fillOrder =
-						"Pixels with lower column values are stored "
-							+ "in the higher order bits of a byte";
+					fillOrder = "Pixels with lower column values are stored " +
+						"in the higher order bits of a byte";
 					break;
 				case 2:
-					fillOrder =
-						"Pixels with lower column values are stored "
-							+ "in the lower order bits of a byte";
+					fillOrder = "Pixels with lower column values are stored " +
+						"in the lower order bits of a byte";
 					break;
 			}
 			table.put("FillOrder", fillOrder);
@@ -1152,7 +1142,8 @@ public class TIFFFormat extends AbstractFormat {
 			table.put("Predictor", predictor);
 
 			putInt(table, "WhitePoint", firstIFD, IFD.WHITE_POINT);
-			putInt(table, "PrimaryChromacities", firstIFD, IFD.PRIMARY_CHROMATICITIES);
+			putInt(table, "PrimaryChromacities", firstIFD,
+				IFD.PRIMARY_CHROMATICITIES);
 
 			putInt(table, "HalftoneHints", firstIFD, IFD.HALFTONE_HINTS);
 			putInt(table, "TileWidth", firstIFD, IFD.TILE_WIDTH);
@@ -1231,12 +1222,12 @@ public class TIFFFormat extends AbstractFormat {
 					subSampling = "chroma image dimensions = luma image dimensions";
 					break;
 				case 2:
-					subSampling =
-						"chroma image dimensions are " + "half the luma image dimensions";
+					subSampling = "chroma image dimensions are " +
+						"half the luma image dimensions";
 					break;
 				case 4:
-					subSampling =
-						"chroma image dimensions are " + "1/4 the luma image dimensions";
+					subSampling = "chroma image dimensions are " +
+						"1/4 the luma image dimensions";
 					break;
 			}
 			table.put("YCbCrSubSampling", subSampling);
@@ -1360,8 +1351,8 @@ public class TIFFFormat extends AbstractFormat {
 		public static final String COMPRESSION_J2K = //
 			CompressionType.J2K.getCompression();
 
-		public static final String COMPRESSION_J2K_LOSSY =
-			CompressionType.J2K_LOSSY.getCompression();
+		public static final String COMPRESSION_J2K_LOSSY = CompressionType.J2K_LOSSY
+			.getCompression();
 
 		public static final String COMPRESSION_JPEG = //
 			CompressionType.JPEG.getCompression();
@@ -1452,9 +1443,8 @@ public class TIFFFormat extends AbstractFormat {
 			synchronized (this) {
 				if (!isInitialized(imageIndex, (int) planeIndex)) {
 
-					final RandomAccessInputStream tmp =
-						new RandomAccessInputStream(getContext(), getMetadata()
-							.getDatasetName());
+					final RandomAccessInputStream tmp = new RandomAccessInputStream(
+						getContext(), getMetadata().getDatasetName());
 					if (tmp.length() == 0) {
 						synchronized (this) {
 							// write TIFF header
@@ -1511,8 +1501,8 @@ public class TIFFFormat extends AbstractFormat {
 		{
 			IFD ifd = new IFD(log());
 			if (!writeSequential()) {
-				final TiffParser parser =
-					new TiffParser(getContext(), getMetadata().getDatasetName());
+				final TiffParser parser = new TiffParser(getContext(), getMetadata()
+					.getDatasetName());
 				try {
 					final long[] ifdOffsets = parser.getIFDOffsets();
 					if (planeIndex < ifdOffsets.length) {
@@ -1547,9 +1537,9 @@ public class TIFFFormat extends AbstractFormat {
 					FormatTools.INT16, FormatTools.UINT16, FormatTools.INT32,
 					FormatTools.UINT32, FormatTools.FLOAT };
 			}
-			return new int[] { FormatTools.INT8, FormatTools.UINT8,
-				FormatTools.INT16, FormatTools.UINT16, FormatTools.INT32,
-				FormatTools.UINT32, FormatTools.FLOAT, FormatTools.DOUBLE };
+			return new int[] { FormatTools.INT8, FormatTools.UINT8, FormatTools.INT16,
+				FormatTools.UINT16, FormatTools.INT32, FormatTools.UINT32,
+				FormatTools.FLOAT, FormatTools.DOUBLE };
 		}
 
 		@Override
@@ -1602,8 +1592,8 @@ public class TIFFFormat extends AbstractFormat {
 			final Metadata meta = getMetadata();
 			final Boolean bigEndian = !meta.get(imageIndex).isLittleEndian();
 			final boolean littleEndian = !bigEndian.booleanValue();
-			final boolean interleaved =
-				meta.get(imageIndex).getInterleavedAxisCount() > 0;
+			final boolean interleaved = meta.get(imageIndex)
+				.getInterleavedAxisCount() > 0;
 
 			final int type = meta.get(imageIndex).getPixelType();
 			int c = (int) meta.get(imageIndex).getAxisLength(Axes.CHANNEL);
@@ -1637,19 +1627,19 @@ public class TIFFFormat extends AbstractFormat {
 			final double physicalSizeY = avgScaleY == 0 ? 0 : 1 / avgScaleY;
 
 			ifd.put(IFD.RESOLUTION_UNIT, 3);
-			ifd.put(IFD.X_RESOLUTION, new TiffRational(
-				(long) (physicalSizeX * 1000 * 10000), 1000));
-			ifd.put(IFD.Y_RESOLUTION, new TiffRational(
-				(long) (physicalSizeY * 1000 * 10000), 1000));
+			ifd.put(IFD.X_RESOLUTION, new TiffRational((long) (physicalSizeX * 1000 *
+				10000), 1000));
+			ifd.put(IFD.Y_RESOLUTION, new TiffRational((long) (physicalSizeY * 1000 *
+				10000), 1000));
 
 			if (!isBigTiff()) {
-				isBigTIFF =
-					(getStream().length() + 2 * (width * height * c * bytesPerPixel)) >= 4294967296L;
+				isBigTIFF = (getStream().length() + 2 * (width * height * c *
+					bytesPerPixel)) >= 4294967296L;
 				if (isBigTiff()) {
 					throw new FormatException(
-						"File is too large for 32-bit TIFF but BigTIFF support was "
-							+ "disabled. Please enable by using setBigTiff(true) or passing a "
-							+ "SCIFIOConfig object with the appropriate BIG_TIFF_KEY,true pair.");
+						"File is too large for 32-bit TIFF but BigTIFF support was " +
+							"disabled. Please enable by using setBigTiff(true) or passing a " +
+							"SCIFIOConfig object with the appropriate BIG_TIFF_KEY,true pair.");
 				}
 			}
 
@@ -1663,8 +1653,8 @@ public class TIFFFormat extends AbstractFormat {
 				getStream().seek((Long) ifd.get(IFD.REUSE));
 			}
 
-			ifd.putIFDValue(IFD.PLANAR_CONFIGURATION, interleaved ||
-				meta.get(imageIndex).getAxisLength(Axes.CHANNEL) == 1 ? 1 : 2);
+			ifd.putIFDValue(IFD.PLANAR_CONFIGURATION, interleaved || meta.get(
+				imageIndex).getAxisLength(Axes.CHANNEL) == 1 ? 1 : 2);
 
 			int sampleFormat = 1;
 			if (FormatTools.isSigned(type)) sampleFormat = 2;
@@ -1738,7 +1728,7 @@ public class TIFFFormat extends AbstractFormat {
 
 		/**
 		 * Replaces Unicode micro sign with 'u'
-		 * 
+		 *
 		 * @param unit a {@link String}
 		 * @return {@code unit} if it does not contain micro sign or a new
 		 *         {@link String} with micro sign replace by 'u'
@@ -1814,28 +1804,28 @@ public class TIFFFormat extends AbstractFormat {
 				sampleFormat = 1;
 			}
 
-			firstIFD.putIFDValue(IFD.BITS_PER_SAMPLE,
-				new int[] { m.getBitsPerPixel() });
+			firstIFD.putIFDValue(IFD.BITS_PER_SAMPLE, new int[] { m
+				.getBitsPerPixel() });
 			firstIFD.putIFDValue(IFD.SAMPLE_FORMAT, sampleFormat);
 			firstIFD.putIFDValue(IFD.LITTLE_ENDIAN, m.isLittleEndian());
 			firstIFD.putIFDValue(IFD.IMAGE_WIDTH, m.getAxisLength(Axes.X));
 			firstIFD.putIFDValue(IFD.IMAGE_LENGTH, m.getAxisLength(Axes.Y));
-			firstIFD
-				.putIFDValue(IFD.SAMPLES_PER_PIXEL, m.getAxisLength(Axes.CHANNEL));
+			firstIFD.putIFDValue(IFD.SAMPLES_PER_PIXEL, m.getAxisLength(
+				Axes.CHANNEL));
 
 			firstIFD.putIFDValue(IFD.PHOTOMETRIC_INTERPRETATION,
 				PhotoInterp.BLACK_IS_ZERO);
 			if (m.isMultichannel()) firstIFD.putIFDValue(
 				IFD.PHOTOMETRIC_INTERPRETATION, PhotoInterp.RGB);
-			if (m.isIndexed() &&
-				HasColorTable.class.isAssignableFrom(source.getClass()))
+			if (m.isIndexed() && HasColorTable.class.isAssignableFrom(source
+				.getClass()))
 			{
 				firstIFD.putIFDValue(IFD.PHOTOMETRIC_INTERPRETATION,
 					PhotoInterp.RGB_PALETTE);
 
 				final ColorTable table = ((HasColorTable) source).getColorTable(0, 0);
-				final int[] flattenedTable =
-					new int[table.getComponentCount() * table.getLength()];
+				final int[] flattenedTable = new int[table.getComponentCount() * table
+					.getLength()];
 
 				for (int i = 0; i < table.getComponentCount(); i++) {
 					for (int j = 0; j < table.getLength(); j++) {
