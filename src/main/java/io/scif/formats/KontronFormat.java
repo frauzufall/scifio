@@ -40,7 +40,6 @@ import io.scif.Format;
 import io.scif.FormatException;
 import io.scif.ImageMetadata;
 import io.scif.config.SCIFIOConfig;
-import io.scif.io.RandomAccessInputStream;
 import io.scif.util.FormatTools;
 
 import java.io.IOException;
@@ -48,6 +47,9 @@ import java.io.IOException;
 import net.imagej.axis.Axes;
 import net.imagej.axis.DefaultLinearAxis;
 
+import org.scijava.io.handle.DataHandle;
+import org.scijava.io.handle.DataHandle.ByteOrder;
+import org.scijava.io.location.Location;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -119,11 +121,11 @@ public class KontronFormat extends AbstractFormat {
 	public static class Parser extends AbstractParser<Metadata> {
 
 		@Override
-		public void typedParse(final RandomAccessInputStream stream,
+		public void typedParse(final DataHandle<Location> stream,
 			final Metadata meta, final SCIFIOConfig config) throws IOException,
 			FormatException
 		{
-			stream.order(true);
+			stream.setOrder(ByteOrder.LITTLE_ENDIAN);
 			stream.seek(KONTRON_ID.length);
 			final short width = stream.readShort();
 			final short height = stream.readShort();
@@ -145,7 +147,7 @@ public class KontronFormat extends AbstractFormat {
 		}
 
 		@Override
-		public boolean isFormat(final RandomAccessInputStream stream)
+		public boolean isFormat(final DataHandle<Location> stream)
 			throws IOException
 		{
 			final byte[] fileStart = new byte[KONTRON_ID.length];
@@ -176,7 +178,7 @@ public class KontronFormat extends AbstractFormat {
 			final ByteArrayPlane plane, final long[] planeMin, final long[] planeMax,
 			final SCIFIOConfig config) throws FormatException, IOException
 		{
-			final RandomAccessInputStream stream = getStream();
+			final DataHandle<Location> stream = getHandle();
 			stream.seek(HEADER_BYTES);
 			return readPlane(stream, imageIndex, planeMin, planeMax, plane);
 		}
