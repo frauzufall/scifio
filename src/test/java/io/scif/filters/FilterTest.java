@@ -44,6 +44,7 @@ import net.imagej.axis.Axes;
 import org.junit.After;
 import org.junit.Test;
 import org.scijava.Context;
+import org.scijava.io.location.FileLocation;
 import org.scijava.plugin.PluginInfo;
 
 /**
@@ -55,7 +56,8 @@ public class FilterTest {
 
 	private final SCIFIO scifio = makeSCIFIO();
 
-	private final String id = "testImg&lengths=512,512.fake";
+	private final FileLocation id = new FileLocation(
+		"testImg&lengths=512,512.fake");
 
 	private Reader readerFilter;
 
@@ -87,7 +89,8 @@ public class FilterTest {
 	 */
 	@Test
 	public void testSetSource() throws FormatException, IOException {
-		final String id2 = "testImg&lengths=256,128,5&axes=X,Y,Time.fake";
+		final FileLocation id2 = new FileLocation(
+			"testImg&lengths=256,128,5&axes=X,Y,Time.fake");
 
 		readerFilter = scifio.initializer().initializeReader(id, new SCIFIOConfig()
 			.checkerSetOpen(true));
