@@ -42,6 +42,8 @@ import net.imglib2.img.basictypeaccess.array.ArrayDataAccess;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
+import org.scijava.io.location.Location;
+
 /**
  * Helper methods for converting between SCIFIO and ImgLib2 data structures.
  *
@@ -60,6 +62,7 @@ public interface ImgUtilityService extends SCIFIOService {
 	 * first file in the archive is cached.
 	 * </p>
 	 */
+	// FIXME: Remove this?
 	String cacheId(final String urlPath) throws ImgIOException;
 
 	/** Obtains planar access instance backing the given img, if any. */
@@ -94,7 +97,7 @@ public interface ImgUtilityService extends SCIFIOService {
 	 * @param source - the location of the dataset to assess
 	 * @return The number of images in the specified dataset.
 	 */
-	int getImageCount(final String source) throws ImgIOException;
+	int getImageCount(final Location source) throws ImgIOException;
 
 	/**
 	 * see {@link #isCompressible(ImgPlus)}

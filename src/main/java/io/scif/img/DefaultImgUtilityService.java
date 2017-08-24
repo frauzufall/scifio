@@ -70,6 +70,7 @@ import net.imglib2.type.numeric.integer.UnsignedShortType;
 import net.imglib2.type.numeric.real.DoubleType;
 import net.imglib2.type.numeric.real.FloatType;
 
+import org.scijava.io.location.Location;
 import org.scijava.plugin.Plugin;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
@@ -142,7 +143,7 @@ public class DefaultImgUtilityService extends AbstractService implements
 	 * @return The number of images in the specified dataset.
 	 */
 	@Override
-	public int getImageCount(final String source) throws ImgIOException {
+	public int getImageCount(final Location source) throws ImgIOException {
 		try {
 			final Format format = scifio().format().getFormat(source);
 			return format.createParser().parse(source).getImageCount();
