@@ -50,8 +50,7 @@ import org.scijava.thread.ThreadService;
  *
  * @author Mark Hiner
  */
-public class SCIFIOCellCache<A extends ArrayDataAccess<A>>
-{
+public class SCIFIOCellCache<A extends ArrayDataAccess<A>> {
 
 	// -- Parameters --
 
