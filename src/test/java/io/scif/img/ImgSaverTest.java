@@ -34,64 +34,89 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import io.scif.config.SCIFIOConfig;
+import io.scif.config.SCIFIOConfig.ImgMode;
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-import org.scijava.Context;
-
-import io.scif.config.SCIFIOConfig;
-import io.scif.config.SCIFIOConfig.ImgMode;
-import io.scif.io.ByteArrayHandle;
-import io.scif.services.LocationService;
 import net.imagej.ImgPlus;
 import net.imagej.axis.CalibratedAxis;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.scijava.Context;
+import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.Location;
+
 /**
  * Tests for the {@link ImgSaver} class.
  *
  * @author Mark Hiner
+ * @author Gabriel Einsdorf
  */
 @RunWith(Parameterized.class)
 public class ImgSaverTest {
 
-	private final String id;
-	private final String out;
-
+	private final Location id;
+	private Location out;
 	private final Context ctx = new Context();
-	private final LocationService locationService = ctx.getService(
-		LocationService.class);
+	private final String format;
 
 	public ImgSaverTest(final String format, final String lengths,
-		final String axes)
+		final String axes) throws IOException
 	{
-		id = "testImg&lengths=" + lengths + "&axes=" + axes + ".fake";
-		out = "test." + format;
+		id = new FileLocation(new File(Files.createTempDirectory("test").toFile(),
+			"testImg&lengths=" + lengths + "&axes=" + axes + ".fake"));
+		this.format = format;
 	}
 
-	@Parameters(name = "Format: {0}; Lengths: {1}; Channels: {2}")
+	@Parameters
 	public static Collection<Object[]> getParams() {
-		final List<Object[]> params = new ArrayList<>();
-		params.add(new Object[] { ".tiff", "100,100,3,2", "X,Y,Z,Time" });
-		params.add(new Object[] { ".tiff", "100,100,3,2", "X,Y,Channel,Z" });
-		params.add(new Object[] { ".tiff", "100,100,3,2", "X,Y,Channel,Time" });
-		params.add(new Object[] { ".tiff", "100,100,3,3,2", "X,Y,Channel,Z,Time" });
-		params.add(new Object[] { ".tiff", "100,100,3", "X,Y,Channel" });
-		return params;
+		final ArrayList<Object[]> o = new ArrayList<>();
+//		o.add(new Object[] { ".tif", "512,512,5,4,2", "X,Y,Z,C,Time" });
+//		o.add(new Object[] { ".tif", "512,512,5,4,2", "X,Y,Z,C,T" });
+//		o.add(new Object[] { ".tif", "512,512,5,4,2", "X,Y,C,T,Z" });
+//		o.add(new Object[] { ".tif", "512,512,5,4,2", "X,Y,T,C,Z" });
+//		o.add(new Object[] { ".tif", "512,512,4,2", "X,Y,Z,Time" });
+//		o.add(new Object[] { ".png", "512,512,3", "X,Y,Channel" });
+//		o.add(new Object[] { ".png", "512,512,4", "X,Y,Channel" });
+		o.add(new Object[] { ".png", "512,512", "X,Y" });
+//		o.add(new Object[] { ".avi", "512,512,3,10", "X,Y,Channel,Time" });
+//		o.add(new Object[] { ".mov", "512,512,3,10", "X,Y,Channel,Time" });
+//		o.add(new Object[] { ".eps", "512,512,3,10", "X,Y,Channel,Time" });
+//		o.add(new Object[] { ".eps", "512,512,3,4,10", "X,Y,Z,Channel,Time" });
+//		o.add(new Object[] { ".ics", "512,512,3,4,10", "X,Y,Z,Channel,Time" });
+//		o.add(new Object[] { ".ics", "512,512,4,10", "X,Y,Channel,Time" });
+//		o.add(new Object[] { ".ics", "512,512,3", "X,Y,Time" });
+//		o.add(new Object[] { ".ics", "512,512,3", "X,Y,Z" });
+//		o.add(new Object[] { ".ics", "512,512,3", "X,Y,Channel" });
+//		o.add(new Object[] { ".jpg", "512,512,3", "X,Y,Channel" });
+//		o.add(new Object[] { ".java", "512,512,3", "X,Y,Channel" });
+
+		return o;
+	}
+
+	@Before
+	public void setup() throws IOException {
+		final File tmpFile = File.createTempFile("test", format);
+		tmpFile.deleteOnExit();
+		out = new FileLocation(tmpFile);
 	}
 
 	@After
 	public void cleanup() {
-		final File f = new File(out);
+		final File f = new File(out.getURI());
 		if (f.exists()) f.delete();
 	}
 
@@ -107,8 +132,8 @@ public class ImgSaverTest {
 		final ImgSaver s = new ImgSaver(ctx);
 		final SCIFIOConfig config = new SCIFIOConfig().imgOpenerSetImgModes(
 			ImgMode.PLANAR);
-		final ByteArrayHandle bah = new ByteArrayHandle();
-		locationService.mapFile(out, bah);
+//		final ByteArrayHandle  = new ByteArrayHandle();
+//		locationService.mapFile(out, bah);
 
 		final SCIFIOImgPlus<?> openImg = o.openImgs(id, config).get(0);
 		final String source = openImg.getSource();
