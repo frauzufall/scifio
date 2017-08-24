@@ -32,7 +32,6 @@ package io.scif.util;
 import io.scif.FormatException;
 import io.scif.Metadata;
 import io.scif.filters.MetadataWrapper;
-import io.scif.io.RandomAccessOutputStream;
 
 import java.util.Arrays;
 import java.util.Hashtable;
@@ -42,6 +41,9 @@ import java.util.Map;
 import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 import net.imagej.axis.CalibratedAxis;
+
+import org.scijava.io.handle.DataHandle;
+import org.scijava.io.location.Location;
 
 /**
  * A utility class for working with {@link io.scif.Metadata} objects.
@@ -162,7 +164,7 @@ public class SCIFIOMetadataTools {
 	 *           metadata object is uninitialized
 	 */
 	public static void verifyMinimumPopulated(final Metadata src,
-		final RandomAccessOutputStream out) throws FormatException
+		final DataHandle<Location> out) throws FormatException
 	{
 		verifyMinimumPopulated(src, out, 0);
 	}
@@ -175,8 +177,7 @@ public class SCIFIOMetadataTools {
 	 *           metadata object is uninitialized
 	 */
 	public static void verifyMinimumPopulated(final Metadata src,
-		final RandomAccessOutputStream out, final int imageIndex)
-		throws FormatException
+		final DataHandle<Location> out, final int imageIndex) throws FormatException
 	{
 		if (src == null) {
 			throw new FormatException("Metadata object is null; " +
