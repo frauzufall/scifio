@@ -38,7 +38,6 @@ import io.scif.Reader;
 import io.scif.SCIFIOService;
 import io.scif.Writer;
 import io.scif.config.SCIFIOConfig;
-import io.scif.io.RandomAccessInputStream;
 
 import java.util.Collection;
 import java.util.List;
@@ -46,6 +45,8 @@ import java.util.Set;
 
 import org.scijava.Priority;
 import org.scijava.Versioned;
+import org.scijava.io.handle.DataHandle;
+import org.scijava.io.location.Location;
 
 /**
  * A collection of methods for finding {@link io.scif.Format} instances given a
@@ -149,7 +150,8 @@ public interface FormatService extends SCIFIOService, Versioned {
 	 *
 	 * @throws FormatException
 	 */
-	Writer getWriterByExtension(String fileId) throws FormatException;
+//	  FIXME: Maybe change this so that it takes only the suffix as a string?
+	Writer getWriterByExtension(Location fileId) throws FormatException;
 
 	/**
 	 * {@code Format} lookup method using the {@code Checker} component.
@@ -189,7 +191,7 @@ public interface FormatService extends SCIFIOService, Versioned {
 	 * @param id the source
 	 * @return A Format reference compatible with the provided source.
 	 */
-	Format getFormat(String id) throws FormatException;
+	Format getFormat(Location id) throws FormatException;
 
 	/**
 	 * Returns the first Format known to be compatible with the source provided.
@@ -199,7 +201,7 @@ public interface FormatService extends SCIFIOService, Versioned {
 	 * @param config Configuration for this method execution.
 	 * @return A Format reference compatible with the provided source.
 	 */
-	Format getFormat(String id, SCIFIOConfig config) throws FormatException;
+	Format getFormat(Location id, SCIFIOConfig config) throws FormatException;
 
 	/**
 	 * Returns a list of all formats that are compatible with the source provided,
@@ -209,7 +211,7 @@ public interface FormatService extends SCIFIOService, Versioned {
 	 * @param id the source
 	 * @return An List of Format references compatible with the provided source.
 	 */
-	List<Format> getFormatList(String id) throws FormatException;
+	List<Format> getFormatList(Location id) throws FormatException;
 
 	/**
 	 * Returns a list of all formats that are compatible with the source provided,
@@ -221,42 +223,42 @@ public interface FormatService extends SCIFIOService, Versioned {
 	 *          compatible format
 	 * @return A List of Format references compatible with the provided source.
 	 */
-	List<Format> getFormatList(String id, SCIFIOConfig config, boolean greedy)
+	List<Format> getFormatList(Location id, SCIFIOConfig config, boolean greedy)
 		throws FormatException;
 
 	/**
-	 * As {@link #getFormat(String)} but takes an initialized
-	 * {@link RandomAccessInputStream}.
+	 * As {@link #getFormat(Location)} but takes an initialized
+	 * {@link DataHandle}.
 	 *
 	 * @param source the source
 	 * @return A Format reference compatible with the provided source.
 	 */
-	Format getFormat(RandomAccessInputStream source) throws FormatException;
+	Format getFormat(DataHandle<Location> source) throws FormatException;
 
 	/**
-	 * As {@link #getFormat(String, SCIFIOConfig)} but takes an initialized
-	 * {@link RandomAccessInputStream}.
+	 * As {@link #getFormat(Location, SCIFIOConfig)} but takes an initialized
+	 * {@link DataHandle}.
 	 *
 	 * @param source the source
 	 * @param config Configuration for this method execution.
 	 * @return A Format reference compatible with the provided source.
 	 */
-	Format getFormat(RandomAccessInputStream source, SCIFIOConfig config)
+	Format getFormat(DataHandle<Location> source, SCIFIOConfig config)
 		throws FormatException;
 
 	/**
-	 * As {@link #getFormatList(String)} but takes an initialized
-	 * {@link RandomAccessInputStream}.
+	 * As {@link #getFormatList(Location)} but takes an initialized
+	 * {@link DataHandle}.
 	 *
 	 * @param source the source
 	 * @return An List of Format references compatible with the provided source.
 	 */
-	List<Format> getFormatList(RandomAccessInputStream source)
+	List<Format> getFormatList(DataHandle<Location> source)
 		throws FormatException;
 
 	/**
-	 * As {@link #getFormatList(String, SCIFIOConfig, boolean)} but takes an
-	 * initialized {@link RandomAccessInputStream}.
+	 * As {@link #getFormatList(Location, SCIFIOConfig, boolean)} but takes an
+	 * initialized {@link DataHandle}.
 	 *
 	 * @param source the source
 	 * @param config Configuration for this method execution.
@@ -264,8 +266,8 @@ public interface FormatService extends SCIFIOService, Versioned {
 	 *          compatible format
 	 * @return A List of Format references compatible with the provided source.
 	 */
-	List<Format> getFormatList(RandomAccessInputStream source,
-		SCIFIOConfig config, boolean greedy) throws FormatException;
+	List<Format> getFormatList(DataHandle<Location> source, SCIFIOConfig config,
+		boolean greedy) throws FormatException;
 
 	/**
 	 * Returns a list of all Formats within this context.
