@@ -35,8 +35,6 @@ import io.scif.Metadata;
 import io.scif.Plane;
 import io.scif.Reader;
 import io.scif.Writer;
-import io.scif.common.ReflectException;
-import io.scif.common.ReflectedUniverse;
 import io.scif.config.SCIFIOConfig;
 
 import java.io.IOException;
@@ -52,6 +50,8 @@ import net.imagej.axis.LinearAxis;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandle.ByteOrder;
 import org.scijava.io.location.Location;
+import org.scijava.util.ReflectException;
+import org.scijava.util.ReflectedUniverse;
 
 /**
  * A collection of constants and utility methods applicable for all cycles of
@@ -1013,7 +1013,7 @@ public final class FormatTools {
 		// NB: Dependency on AWT here is unfortunate, but very difficult to
 		// eliminate in general. We use reflection to limit class loading
 		// problems with AWT on Mac OS X.
-		final ReflectedUniverse r = new ReflectedUniverse(reader.log());
+		final ReflectedUniverse r = new ReflectedUniverse();
 		byte[][] bytes = null;
 		try {
 			r.exec("import io.scif.gui.AWTImageTools");
