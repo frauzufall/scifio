@@ -1341,7 +1341,7 @@ public class ICSFormat extends AbstractFormat {
 				c[c.length - 2]++;
 				idsId = new String(c);
 				icsLocation = (BrowsableLocation) stream.get();
-				idsLocation = icsLocation.createSibling(idsId);
+				idsLocation = icsLocation.sibling(idsId);
 			}
 			else if ("ids".equals(ext)) {
 				// convert D to C regardless of case
@@ -1350,7 +1350,7 @@ public class ICSFormat extends AbstractFormat {
 				icsId = new String(c);
 
 				idsLocation = (BrowsableLocation) stream.get();
-				icsLocation = idsLocation.createSibling(icsId);
+				icsLocation = idsLocation.sibling(icsId);
 			}
 			else {
 				throw new FormatException("Companion file not found");

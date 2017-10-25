@@ -884,14 +884,14 @@ public class DICOMFormat extends AbstractFormat {
 
 				// look for matching files in the current directory
 				final BrowsableLocation currentFile = asBrowsableLocation(getSource());
-				BrowsableLocation directory = currentFile.getParent();
+				BrowsableLocation directory = currentFile.parent();
 				scanDirectory(fileList, directory, false);
 
 				// move up a directory and look for other directories that
 				// could contain matching files
 
-				directory = directory.getParent();
-				final Set<BrowsableLocation> subdirs = directory.getChildren();
+				directory = directory.parent();
+				final Set<BrowsableLocation> subdirs = directory.children();
 				if (subdirs != null) {
 					for (final BrowsableLocation subdir : subdirs) {
 						if (!subdir.isDirectory()) continue;
@@ -936,14 +936,14 @@ public class DICOMFormat extends AbstractFormat {
 		{
 			// TODO check if valid
 			final BrowsableLocation parent = asBrowsableLocation(getSource())
-				.getParent();
-			final BrowsableLocation grandparent = parent.getParent();
+				.parent();
+			final BrowsableLocation grandparent = parent.parent();
 
-			final BrowsableLocation mifSibling = parent.createSibling(parent
+			final BrowsableLocation mifSibling = parent.sibling(parent
 				.getName() + ".mif");
 			if (dataHandleService.handleExists(mifSibling)) {
 
-				final Set<BrowsableLocation> list = grandparent.getChildren();
+				final Set<BrowsableLocation> list = grandparent.children();
 				for (final BrowsableLocation f : list) {
 					if (!f.isDirectory()) {
 						companionFiles.add(f);
@@ -966,7 +966,7 @@ public class DICOMFormat extends AbstractFormat {
 			Location[] patternFiles = pattern.getFiles();
 			if (patternFiles == null) patternFiles = new Location[0];
 			Arrays.sort(patternFiles);
-			final Set<BrowsableLocation> files = dir.getChildren();
+			final Set<BrowsableLocation> files = dir.children();
 			if (files == null) return;
 			// FIXME should we sort the files too?
 			for (final BrowsableLocation f : files) {

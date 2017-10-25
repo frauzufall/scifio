@@ -201,7 +201,7 @@ public class NRRDFormat extends AbstractFormat {
 			try {
 				// look for a matching .nhdr file
 				String name = loc.getName();
-				Location header = bLoc.createSibling(name + ".nhdr");
+				Location header = bLoc.sibling(name + ".nhdr");
 				if (dataHandleService.handleExists(header)) {
 					return true;
 				}
@@ -211,7 +211,7 @@ public class NRRDFormat extends AbstractFormat {
 					name = name.substring(0, name.lastIndexOf('.'));
 				}
 
-				header = bLoc.createSibling(name + ".nhdr");
+				header = bLoc.sibling(name + ".nhdr");
 				return dataHandleService.handleExists(header);
 			}
 			catch (final IOException e) {
@@ -271,12 +271,12 @@ public class NRRDFormat extends AbstractFormat {
 				changedStream = true;
 				id += ".nhdr";
 
-				if (!dataHandleService.handleExists(loc.createSibling(id))) {
+				if (!dataHandleService.handleExists(loc.sibling(id))) {
 					id = id.substring(0, id.lastIndexOf('.'));
 					id = id.substring(0, id.lastIndexOf('.'));
 					id += ".nhdr";
 				}
-				newLocation = loc.createSibling(id);
+				newLocation = loc.sibling(id);
 			}
 
 			if (changedStream) {
@@ -358,7 +358,7 @@ public class NRRDFormat extends AbstractFormat {
 						}
 					}
 					else if (key.equals("data file") || key.equals("datafile")) {
-						meta.setDataFile(asBrowsableLocation(stream).createSibling(v));
+						meta.setDataFile(asBrowsableLocation(stream).sibling(v));
 					}
 					else if (key.equals("encoding")) meta.setEncoding(v);
 					else if (key.equals("endian")) {
@@ -383,11 +383,11 @@ public class NRRDFormat extends AbstractFormat {
 			if (meta.getDataFile() == null) meta.setOffset(stream.offset());
 			else {
 				final BrowsableLocation f = asBrowsableLocation(getSource());
-				final Location parent = f.getParent();
+				final Location parent = f.parent();
 				if (dataHandleService.handleExists(f) && parent != null) {
 					String dataFile = meta.getDataFile().getName();
 					dataFile = dataFile.substring(dataFile.indexOf(File.separator) + 1);
-					final Location dataLocation = f.createSibling(dataFile);
+					final Location dataLocation = f.sibling(dataFile);
 					// TODO I think is was missing here:
 					meta.setDataFile(dataLocation);
 				}

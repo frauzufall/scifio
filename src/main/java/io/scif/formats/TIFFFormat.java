@@ -462,8 +462,8 @@ public class TIFFFormat extends AbstractFormat {
 //					.getFileName()).getAbsoluteFile();
 				final BrowsableLocation currentFile = asBrowsableLocation(getSource());
 				final String currentName = currentFile.getName();
-				final BrowsableLocation directory = currentFile.getParent();
-				final Set<BrowsableLocation> files = directory.getChildren();
+				final BrowsableLocation directory = currentFile.parent();
+				final Set<BrowsableLocation> files = directory.children();
 				if (!files.isEmpty()) {
 					for (final Location file : files) {
 						String name = file.getName();

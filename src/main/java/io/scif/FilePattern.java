@@ -183,7 +183,7 @@ public class FilePattern {
 
 		if (files.length == 0) {
 			try {
-				final BrowsableLocation sibling = baseLoc.createSibling(pattern);
+				final BrowsableLocation sibling = baseLoc.sibling(pattern);
 				if (dataHandleService.handleExists(sibling)) {
 					files = new Location[] { sibling };
 				}
@@ -302,7 +302,7 @@ public class FilePattern {
 		if (blocks.length == 0) {
 			// regex pattern
 
-			final Location patternLocation = baseLoc.createSibling(pattern);
+			final Location patternLocation = baseLoc.sibling(pattern);
 			if (dataHandleService.handleExists(patternLocation)) {
 				fileList.add(patternLocation);
 				return;
@@ -329,12 +329,12 @@ public class FilePattern {
 				end = endNotRegex;
 			}
 			if ("".equals(dir) || !dataHandleService.handleExists(baseLoc
-				.createSibling(dir)))
+				.sibling(dir)))
 			{
-				localfiles = getAllFiles(baseLoc.getParent());
+				localfiles = getAllFiles(baseLoc.parent());
 			}
 			else {
-				localfiles = getAllFiles(baseLoc.createSibling(dir));
+				localfiles = getAllFiles(baseLoc.sibling(dir));
 			}
 
 			final String basePattern = pattern.substring(end);
@@ -361,7 +361,7 @@ public class FilePattern {
 			final int n2 = ndx == num ? pattern.length() : startIndex[ndx];
 			final String pre = pattern.substring(n1, n2);
 
-			if (ndx == 0) fileList.add(baseLoc.createSibling(pre + prefix));
+			if (ndx == 0) fileList.add(baseLoc.sibling(pre + prefix));
 			else {
 				final FilePatternBlock block = blocks[--ndx];
 				final String[] blockElements = block.getElements();
@@ -378,7 +378,7 @@ public class FilePattern {
 		final List<Location> subfiles = new ArrayList<>();
 
 		final BrowsableLocation root = dir;
-		final Set<BrowsableLocation> children = root.getChildren();
+		final Set<BrowsableLocation> children = root.children();
 
 		for (final BrowsableLocation child : children) {
 			final List<Location> grandChildren = getAllFiles(child);

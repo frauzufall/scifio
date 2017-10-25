@@ -185,7 +185,7 @@ public class MicromanagerFormat extends AbstractFormat {
 			final SCIFIOConfig config, final DataHandle<Location> handle)
 		{
 			try {
-				final Location metaFile = location.createSibling(METADATA);
+				final Location metaFile = location.sibling(METADATA);
 				boolean validMetaData = isFormat(handle);
 				if (!validMetaData) return false;
 				final io.scif.Checker checker;
@@ -283,8 +283,8 @@ public class MicromanagerFormat extends AbstractFormat {
 			// find metadata.txt
 
 			final BrowsableLocation file = asBrowsableLocation(stream);
-			BrowsableLocation parentFile = file.getParent();
-			final BrowsableLocation metadataFile = file.createSibling(METADATA);
+			BrowsableLocation parentFile = file.parent();
+			final BrowsableLocation metadataFile = file.sibling(METADATA);
 
 			if (metadataFile == null || parentFile == null) {
 				throw new IOException(
@@ -294,14 +294,14 @@ public class MicromanagerFormat extends AbstractFormat {
 			// look for other positions
 
 			if (parentFile.getName().contains("Pos_")) {
-				parentFile = parentFile.getParent();
-				final Set<BrowsableLocation> dirs = parentFile.getChildren();
+				parentFile = parentFile.parent();
+				final Set<BrowsableLocation> dirs = parentFile.children();
 
 				// Arrays.sort(dirs); // FIXME is this needed?
 				for (final BrowsableLocation dir : dirs) {
 					if (dir.getName().contains("Pos_")) {
 						final Position pos = new Position();
-						pos.metadataFile = dir.createChild(METADATA);
+						pos.metadataFile = dir.child(METADATA);
 						positions.add(pos);
 					}
 				}
@@ -385,7 +385,7 @@ public class MicromanagerFormat extends AbstractFormat {
 			try {
 				final Position p = meta.getPositions().get(posIndex);
 				final ImageMetadata ms = meta.get(posIndex);
-				final BrowsableLocation parent = p.metadataFile.getParent();
+				final BrowsableLocation parent = p.metadataFile.parent();
 
 				log().info("Finding image file names");
 
@@ -401,7 +401,7 @@ public class MicromanagerFormat extends AbstractFormat {
 					final List<String> uniqueC = new ArrayList<>();
 					final List<String> uniqueT = new ArrayList<>();
 
-					final Set<BrowsableLocation> fSet = parent.getChildren();
+					final Set<BrowsableLocation> fSet = parent.children();
 					final Location[] files = fSet.toArray(new Location[fSet.size()]);
 					Arrays.sort(files);
 					for (final Location file : files) {
@@ -528,7 +528,7 @@ public class MicromanagerFormat extends AbstractFormat {
 						p.comment = value;
 					}
 					else if (key.equals("FileName")) {
-						final Location file = metadataFile.createSibling(value);
+						final Location file = metadataFile.sibling(value);
 						p.locationMap.put(new Index(slice), file);
 						if (p.baseTiff == null) {
 							p.baseTiff = file;
@@ -646,7 +646,7 @@ public class MicromanagerFormat extends AbstractFormat {
 							p.voltage.add(new Double(value));
 						}
 						else if (key.equals("FileName")) {
-							final Location file = metadataFile.createSibling(value);
+							final Location file = metadataFile.sibling(value);
 							p.locationMap.put(new Index(slice), file);
 							if (p.baseTiff == null) {
 								p.baseTiff = file;
@@ -663,7 +663,7 @@ public class MicromanagerFormat extends AbstractFormat {
 
 			// look for the optional companion XML file
 
-			p.xmlFile = p.metadataFile.createSibling(XML);
+			p.xmlFile = p.metadataFile.sibling(XML);
 			if (p.xmlFile != null) {
 				parseXMLFile(meta, posIndex);
 			}
@@ -711,7 +711,7 @@ public class MicromanagerFormat extends AbstractFormat {
 						filename.append(z);
 						filename.append(".tif");
 
-						p.tiffs.add(p.metadataFile.createSibling(filename.toString()));
+						p.tiffs.add(p.metadataFile.sibling(filename.toString()));
 						filename.delete(0, filename.length());
 					}
 				}
@@ -859,7 +859,7 @@ public class MicromanagerFormat extends AbstractFormat {
 	 * Necessary dummy translator, so that a Micromanager-OMEXML translator can be
 	 * used
 	 */
-	@Plugin(type = Translator.class, priority = Priority.LOW_PRIORITY)
+	@Plugin(type = Translator.class, priority = Priority.LOW)
 	public static class MicromanagerTranslator extends DefaultTranslator {
 
 		@Override

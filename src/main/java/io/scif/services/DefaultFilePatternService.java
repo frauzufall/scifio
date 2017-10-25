@@ -74,7 +74,7 @@ public class DefaultFilePatternService extends AbstractService implements
 
 	@Override
 	public String findPattern(final BrowsableLocation file) throws IOException {
-		return findPattern(file, file.getParent());
+		return findPattern(file, file.parent());
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class DefaultFilePatternService extends AbstractService implements
 		final BrowsableLocation dir) throws IOException
 	{
 		// list files in the given directory
-		final Set<BrowsableLocation> f = dir.getChildren();
+		final Set<BrowsableLocation> f = dir.children();
 		if (f.isEmpty()) return null;
 		return findPattern(name, dir, f);
 	}
@@ -263,8 +263,8 @@ public class DefaultFilePatternService extends AbstractService implements
 		throws IOException
 	{
 		final BrowsableLocation file = base;
-		final BrowsableLocation parent = file.getParent();
-		final Set<BrowsableLocation> list = parent.getChildren();
+		final BrowsableLocation parent = file.parent();
+		final Set<BrowsableLocation> list = parent.children();
 		return findImagePatterns(base, parent, list);
 	}
 
@@ -296,7 +296,7 @@ public class DefaultFilePatternService extends AbstractService implements
 				dataHandleService).getFiles();
 
 			if (!patterns.contains(pattern) && (!dataHandleService.handleExists(base
-				.createSibling(pattern))) && patternSuffix.equals(baseSuffix) &&
+				.sibling(pattern))) && patternSuffix.equals(baseSuffix) &&
 				ArrayUtils.indexOf(checkFiles, base) >= 0)
 			{
 				patterns.add(pattern);

@@ -48,6 +48,7 @@ import org.scijava.Context;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandle.ByteOrder;
 import org.scijava.io.handle.DataHandleService;
+import org.scijava.io.handle.DataHandles;
 import org.scijava.io.location.BytesLocation;
 import org.scijava.io.location.FileLocation;
 import org.scijava.io.location.Location;
@@ -584,7 +585,7 @@ public class TiffSaver extends AbstractContextual {
 		if (bigTiff) out.writeLong(keyCount);
 		else out.writeShort(keyCount);
 
-		final BytesLocation extra = new BytesLocation(1000000);
+		final BytesLocation extra = new BytesLocation(1_000_000);
 		final DataHandle<Location> extraHandle = dataHandleService.create(extra);
 
 		for (final Integer key : keys) {
@@ -596,7 +597,9 @@ public class TiffSaver extends AbstractContextual {
 		}
 		if (bigTiff) out.seek(out.offset());
 		writeIntValue(out, nextOffset);
-		out.write(extra.getByteBank(), 0, (int) extraHandle.length());
+
+		DataHandles.writeBytebankToHandle(out, extra.getByteBank(), 0, extraHandle
+			.length());
 	}
 
 	/**
@@ -893,7 +896,8 @@ public class TiffSaver extends AbstractContextual {
 				writeIntValue(out, newOffset);
 				if (extraHandle.length() > 0) {
 					out.seek(newOffset);
-					out.write(extraBuf.getByteBank(), 0, newCount);
+					DataHandles.writeBytebankToHandle(out, extraBuf.getByteBank(), 0,
+						newCount);
 				}
 				return;
 			}
