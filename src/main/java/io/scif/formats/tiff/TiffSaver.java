@@ -598,8 +598,8 @@ public class TiffSaver extends AbstractContextual {
 		if (bigTiff) out.seek(out.offset());
 		writeIntValue(out, nextOffset);
 
-		DataHandles.writeBytebankToHandle(out, extra.getByteBank(), 0, extraHandle
-			.length());
+		extraHandle.seek(0l);
+		DataHandles.copyBytes(extraHandle, out, extraHandle.length());
 	}
 
 	/**
@@ -896,8 +896,8 @@ public class TiffSaver extends AbstractContextual {
 				writeIntValue(out, newOffset);
 				if (extraHandle.length() > 0) {
 					out.seek(newOffset);
-					DataHandles.writeBytebankToHandle(out, extraBuf.getByteBank(), 0,
-						newCount);
+					extraHandle.seek(0l);
+					DataHandles.copyBytes(extraHandle, out, newCount);
 				}
 				return;
 			}
