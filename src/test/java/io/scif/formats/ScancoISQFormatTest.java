@@ -175,7 +175,7 @@ public class ScancoISQFormatTest {
 
 		final DataHandle<Location> handle = FormatTestHelpers
 			.createLittleEndianHandle(ScancoISQFormat.Metadata.HEADER_BLOCK,
-				dataHandleService);
+				dataHandleService, true);
 
 		handle.seek(28);
 		handle.writeInt(patientIndex);
@@ -263,7 +263,7 @@ public class ScancoISQFormatTest {
 
 		final DataHandle<Location> handle = FormatTestHelpers
 			.createLittleEndianHandle(ScancoISQFormat.Metadata.HEADER_BLOCK +
-				imageBytes, dataHandleService);
+				imageBytes, dataHandleService, true);
 		handle.seek(44);
 		handle.writeInt(width);
 		handle.writeInt(height);
