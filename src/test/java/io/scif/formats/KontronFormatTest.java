@@ -144,8 +144,8 @@ public class KontronFormatTest {
 
 		// Mock a Kontron header
 		stream.write(KontronFormat.KONTRON_ID);
-		stream.writeShort((short) width);
-		stream.writeShort((short) height);
+		stream.writeShort(width);
+		stream.writeShort(height);
 //		stream.seek(HEADER_BYTES);
 
 		reader.setSource(stream);
@@ -161,8 +161,8 @@ public class KontronFormatTest {
 	@Test
 	public void testOpenPlane() throws Exception {
 		// SETUP
-		final short width = 10;
-		final short height = 10;
+		final int width = 10;
+		final int height = 10;
 		final int planeBytes = width * height * 2;
 		final long[] planeMin = { 0, 0 };
 		final long[] planeMax = { width, height };
@@ -170,15 +170,19 @@ public class KontronFormatTest {
 		plane.setData(new byte[planeBytes]);
 
 		final DataHandle<Location> handle = FormatTestHelpers
-			.createLittleEndianHandle(HEADER_BYTES + planeBytes, dataHandleService);
+			.createLittleEndianHandle(HEADER_BYTES + planeBytes, dataHandleService, true);
+		handle.write(KontronFormat.KONTRON_ID);
+		handle.writeShort(width);
+		handle.writeShort(height);
+
 		handle.seek(KONTRON_ID.length);
 		handle.writeShort(width);
 		handle.writeShort(height);
-		final Reader reader = format.createReader();
-		reader.setSource(handle);
+		final Reader r = format.createReader();
+		r.setSource(handle);
 
 		// EXECUTE
-		reader.openPlane(0, 0, plane, planeMin, planeMax, new SCIFIOConfig());
+		r.openPlane(0, 0, plane, planeMin, planeMax, new SCIFIOConfig());
 
 		// VERIFY
 		assertEquals(
