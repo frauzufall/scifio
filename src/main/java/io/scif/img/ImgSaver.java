@@ -476,21 +476,6 @@ public class ImgSaver extends AbstractImgIOComponent {
 		Writer w = null;
 
 		try {
-			boolean matches = false;
-			for (final Format format : formatService.getFormatList(id)) {
-				if (!format.getWriterClass().equals(DefaultWriter.class)) {
-					matches = true;
-					break;
-				}
-			}
-
-			if (matches) {
-				// FIXME: Should we replicate this with the new API?
-//				final File f = new File(id);
-//				if (f.exists()) {
-//					f.delete();
-//				}
-			}
 			w = formatService.getWriterByExtension(id);
 		}
 		catch (final FormatException e) {
