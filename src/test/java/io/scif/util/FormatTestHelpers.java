@@ -1,6 +1,7 @@
 
 package io.scif.util;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import org.scijava.io.handle.DataHandle;
@@ -14,10 +15,29 @@ public class FormatTestHelpers {
 	public static DataHandle<Location> createLittleEndianHandle(
 		final int capacity, final DataHandleService dataHandleService)
 	{
+		try {
+			return createLittleEndianHandle(capacity, dataHandleService, false);
+		}
+		catch (IOException exc) {
+			throw new IllegalStateException(exc);
+		}
+	}
+
+	public static DataHandle<Location> createLittleEndianHandle(
+		final int capacity, final DataHandleService dataHandleService,
+		boolean zerofill) throws IOException
+	{
 		// little endian bytebank
 		final ByteBufferByteBank buffer = new ByteBufferByteBank(cap -> {
 			return ByteBuffer.allocate(cap).order(java.nio.ByteOrder.LITTLE_ENDIAN);
 		}, capacity);
-		return dataHandleService.create(new BytesLocation(buffer));
+		DataHandle<Location> handle = dataHandleService.create(new BytesLocation(
+			buffer));
+		if (zerofill) {
+			handle.write(new byte[capacity]);
+			handle.seek(0l);
+		}
+		handle.setLittleEndian(true);
+		return handle;
 	}
 }
