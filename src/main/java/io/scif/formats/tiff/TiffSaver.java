@@ -599,7 +599,7 @@ public class TiffSaver extends AbstractContextual {
 		writeIntValue(out, nextOffset);
 
 		extraHandle.seek(0l);
-		DataHandles.copyBytes(extraHandle, out, extraHandle.length());
+		DataHandles.copy(extraHandle, out);
 	}
 
 	/**
@@ -897,7 +897,7 @@ public class TiffSaver extends AbstractContextual {
 				if (extraHandle.length() > 0) {
 					out.seek(newOffset);
 					extraHandle.seek(0l);
-					DataHandles.copyBytes(extraHandle, out, newCount);
+					DataHandles.copy(extraHandle, out, newCount);
 				}
 				return;
 			}
