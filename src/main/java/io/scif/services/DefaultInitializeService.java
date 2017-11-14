@@ -29,6 +29,7 @@
 
 package io.scif.services;
 
+import io.scif.DefaultReader;
 import io.scif.Format;
 import io.scif.FormatException;
 import io.scif.Metadata;
@@ -84,6 +85,9 @@ public class DefaultInitializeService extends AbstractService implements
 		final SCIFIOConfig config) throws FormatException, IOException
 	{
 		final Reader r = formatService.getFormat(id, config).createReader();
+		if(r.getClass() == DefaultReader.class) {
+			throw new IOException("Format is write-only!");
+		}
 		r.setSource(id, config);
 		return new ReaderFilter(r);
 	}
