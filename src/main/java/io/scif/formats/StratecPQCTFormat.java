@@ -6,13 +6,13 @@
  * %%
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,9 +29,16 @@
 
 package io.scif.formats;
 
-import io.scif.*;
+import io.scif.AbstractChecker;
+import io.scif.AbstractFormat;
+import io.scif.AbstractMetadata;
+import io.scif.AbstractParser;
+import io.scif.ByteArrayPlane;
+import io.scif.ByteArrayReader;
+import io.scif.Format;
+import io.scif.FormatException;
+import io.scif.ImageMetadata;
 import io.scif.config.SCIFIOConfig;
-import io.scif.io.RandomAccessInputStream;
 import io.scif.util.FormatTools;
 
 import java.io.IOException;
@@ -43,6 +50,8 @@ import java.util.Date;
 import net.imagej.axis.Axes;
 import net.imagej.axis.DefaultLinearAxis;
 
+import org.scijava.io.handle.DataHandle;
+import org.scijava.io.location.Location;
 import org.scijava.plugin.Plugin;
 
 /**
@@ -83,7 +92,7 @@ public class StratecPQCTFormat extends AbstractFormat {
 	 * @return The string read from the stream
 	 * @throws IOException If reading fails
 	 */
-	private static String readShortString(final RandomAccessInputStream stream)
+	private static String readShortString(final DataHandle<Location> stream)
 		throws IOException
 	{
 		final byte length = stream.readByte();
@@ -127,11 +136,11 @@ public class StratecPQCTFormat extends AbstractFormat {
 		}
 
 		@Override
-		public boolean isFormat(final RandomAccessInputStream stream)
+		public boolean isFormat(final DataHandle<Location> stream)
 			throws IOException
 		{
-			final String fileName = Paths.get(stream.getFileName()).getFileName()
-				.toString();
+			final String fileName = stream.get().getName();
+			if(fileName.length() < 9) return false; // name is to short
 			final String mainPart = fileName.substring(0, 8);
 			if (!mainPart.matches(NAME_FORMAT) || stream.length() < HEADER_SIZE) {
 				return false;
@@ -276,7 +285,7 @@ public class StratecPQCTFormat extends AbstractFormat {
 			return measurementInfo;
 		}
 
-		public void setMeasurementInfo(final RandomAccessInputStream stream) {
+		public void setMeasurementInfo(final DataHandle<Location> stream) {
 			StringBuffer info = new StringBuffer(320);
 
 			try {
@@ -386,12 +395,12 @@ public class StratecPQCTFormat extends AbstractFormat {
 	public static class Parser extends AbstractParser<Metadata> {
 
 		@Override
-		public void typedParse(final RandomAccessInputStream stream,
+		public void typedParse(final DataHandle<Location> stream,
 			final Metadata meta, final SCIFIOConfig config) throws IOException,
 			FormatException
 		{
 			config.imgOpenerSetComputeMinMax(true);
-			stream.order(true);
+			stream.setLittleEndian(true);
 
 			stream.seek(12);
 			meta.setResolution(stream.readDouble());
@@ -441,7 +450,7 @@ public class StratecPQCTFormat extends AbstractFormat {
 			final ByteArrayPlane plane, final long[] planeMin, final long[] planeMax,
 			final SCIFIOConfig config) throws FormatException, IOException
 		{
-			final RandomAccessInputStream stream = getStream();
+			final DataHandle<Location> stream = getHandle();
 			stream.seek(HEADER_SIZE);
 			return readPlane(stream, imageIndex, planeMin, planeMax, plane);
 		}
