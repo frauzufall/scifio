@@ -81,7 +81,7 @@ public class ImgSaverTest {
 		this.format = format;
 	}
 
-	@Parameters
+	@Parameters(name="Format {0}, Size {1}, Dims {2}")
 	public static Collection<Object[]> getParams() {
 		final ArrayList<Object[]> o = new ArrayList<>();
 //		o.add(new Object[] { ".tif", "512,512,5,4,2", "X,Y,Z,C,Time" });
