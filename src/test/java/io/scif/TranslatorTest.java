@@ -41,13 +41,15 @@ import io.scif.formats.FakeFormat;
 import io.scif.formats.ICSFormat;
 import io.scif.services.TranslatorService;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import net.imagej.axis.Axes;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.scijava.io.location.FileLocation;
-import org.scijava.io.location.Location;
 
 /**
  * Unit tests for {@link io.scif.Translator} interface methods.
@@ -56,12 +58,19 @@ import org.scijava.io.location.Location;
  */
 public class TranslatorTest {
 
-	private final Location id = new FileLocation(
-		"interleaved&pixelType=int8&axes=Channel,X,Y,Z&lengths=3,256,256,5.fake");
-
-	private final Location output = new FileLocation("testFile.ics");
-
 	private final SCIFIO scifio = new SCIFIO();
+	private FileLocation in;
+	private FileLocation out;
+
+	@Before
+	public void setup() throws IOException {
+		final String id =
+			"interleaved&pixelType=int8&axes=Channel,X,Y,Z&lengths=3,256,256,5.fake";
+		final String outid = "testFile.ics";
+		File testDir = Files.createTempDirectory("scifio-tests").toFile();
+		in = new FileLocation(new File(testDir, id));
+		out = new FileLocation(new File(testDir, outid));
+	}
 
 	/**
 	 * Basic translation test. Ensures that we can always translate naively
@@ -69,8 +78,8 @@ public class TranslatorTest {
 	 */
 	@Test
 	public void testDirectTranslation() throws IOException, FormatException {
-		final Metadata source = scifio.initializer().parseMetadata(id);
-		final Metadata dest = scifio.format().getFormat(output).createMetadata();
+		final Metadata source = scifio.initializer().parseMetadata(in);
+		final Metadata dest = scifio.format().getFormat(out).createMetadata();
 
 		assertTrue(scifio.translator().translate(source, dest, false));
 	}
@@ -81,13 +90,13 @@ public class TranslatorTest {
 	 */
 	@Test
 	public void testWrappedTranslation() throws IOException, FormatException {
-		final ReaderFilter rf = scifio.initializer().initializeReader(id);
+		final ReaderFilter rf = scifio.initializer().initializeReader(in);
 
 		// enable a reader filter to trigger metadata wrapping
 		rf.enable(PlaneSeparator.class).separate(Axes.CHANNEL);
 
 		final Metadata source = rf.getMetadata();
-		final Metadata dest = scifio.format().getFormat(output).createMetadata();
+		final Metadata dest = scifio.format().getFormat(out).createMetadata();
 
 		// Verify that the ICSTranslator is discovered
 		final Translator t = scifio.translator().findTranslator(source, dest,
@@ -112,8 +121,8 @@ public class TranslatorTest {
 	 */
 	@Test()
 	public void testNoTranslator() throws IOException, FormatException {
-		final Metadata source = scifio.initializer().parseMetadata(id);
-		final Metadata dest = scifio.format().getFormat(output).createMetadata();
+		final Metadata source = scifio.initializer().parseMetadata(in);
+		final Metadata dest = scifio.format().getFormat(out).createMetadata();
 
 		// This translation should fail, as there is no "Fake to ICS" translator
 		assertFalse(scifio.translator().translate(source, dest, true));

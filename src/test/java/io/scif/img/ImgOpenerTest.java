@@ -64,6 +64,7 @@ import org.scijava.Context;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.BytesLocation;
+import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.FileLocation;
 import org.scijava.io.location.Location;
 
@@ -78,7 +79,7 @@ public class ImgOpenerTest {
 	// to ensure all necessary services are present
 	private final ImgOpener imgOpener = new ImgOpener();
 
-	private final Location id = new FileLocation(
+	private final Location id = new DummyLocation(
 		"testImg&lengths=512,512,5&axes=X,Y,Time.fake");
 
 	/**
@@ -87,7 +88,7 @@ public class ImgOpenerTest {
 	 */
 	@Test
 	public void testImgCalibration() throws ImgIOException {
-		final Location calId = new FileLocation(
+		final Location calId = new DummyLocation(
 			"testImg&lengths=512,512,3,5&axes=X,Y,Z,Time&scales=5.0,6.0,7.0,8.0.fake");
 
 		@SuppressWarnings("rawtypes")
@@ -112,7 +113,7 @@ public class ImgOpenerTest {
 
 	@Test
 	public void testCalibrationUnits() throws ImgIOException {
-		final Location calId = new FileLocation(
+		final Location calId = new DummyLocation(
 			"testImg&lengths=512,512,3&axes=X,Y,Z&scales=5.0,6.0,7.0&units=micron,um,inches.fake");
 
 		final ImgPlus<?> imgPlus = imgOpener.openImgs(calId).get(0);
@@ -150,7 +151,7 @@ public class ImgOpenerTest {
 	@Test
 	public void testOpenAllImages() throws ImgIOException {
 
-		final Location id = new FileLocation(
+		final Location id = new DummyLocation(
 			"testImg&images=5&lengths=512,512&axes=X,Y.fake");
 
 		// Open all images
@@ -178,7 +179,7 @@ public class ImgOpenerTest {
 	 */
 	@Test
 	public void testOpenImageRange() throws ImgIOException {
-		final Location id = new FileLocation(
+		final Location id = new DummyLocation(
 			"testImg&images=5&lengths=512,512&axes=X,Y.fake");
 
 		// Open images 0 and 3

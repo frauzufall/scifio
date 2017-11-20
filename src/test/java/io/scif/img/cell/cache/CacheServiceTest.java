@@ -56,7 +56,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.scijava.Context;
-import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**
@@ -454,7 +454,7 @@ public class CacheServiceTest {
 	// return a fake id for a file of the specified size
 	private Location makeFakeFile(final long bytes) {
 		final long dim = Math.round(Math.sqrt(bytes));
-		return new FileLocation("testImg&lengths=" + dim + "," + dim + ".fake");
+		return new DummyLocation("testImg&lengths=" + dim + "," + dim + ".fake");
 	}
 
 	// Creates a SCIFIOCellCache anonymously for a file of the specified size
