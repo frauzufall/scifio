@@ -194,7 +194,7 @@ public class TiffParser extends AbstractContextual {
 		if (!littleEndian && !bigEndian) return null;
 
 		// check magic number (42)
-		in.setOrder(littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
+		in.setLittleEndian(littleEndian);
 		final short magic = in.readShort();
 		bigTiff = magic == TiffConstants.BIG_TIFF_MAGIC_NUMBER;
 		if (magic != TiffConstants.MAGIC_NUMBER &&
@@ -203,7 +203,7 @@ public class TiffParser extends AbstractContextual {
 			return null;
 		}
 
-		return Boolean.valueOf(littleEndian);
+		return littleEndian;
 	}
 
 	/** Returns whether or not the current TIFF file contains BigTIFF data. */
@@ -749,8 +749,7 @@ public class TiffParser extends AbstractContextual {
 		log.trace("parsing IFD entries");
 
 		// get internal non-IFD entries
-		final boolean littleEndian = ifd.isLittleEndian();
-		in.setOrder(littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
+		in.setLittleEndian(ifd.isLittleEndian());
 
 		// get relevant IFD entries
 		final int samplesPerPixel = ifd.getSamplesPerPixel();

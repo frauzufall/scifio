@@ -179,7 +179,7 @@ public class TiffSaver extends AbstractContextual {
 
 	/** Sets whether or not little-endian data should be written. */
 	public void setLittleEndian(final boolean littleEndian) {
-		out.setOrder(littleEndian ? ByteOrder.LITTLE_ENDIAN : ByteOrder.BIG_ENDIAN);
+		out.setLittleEndian(littleEndian);
 	}
 
 	/** Sets whether or not BigTIFF data should be written. */
@@ -614,9 +614,8 @@ public class TiffSaver extends AbstractContextual {
 		final long offset, final int tag, Object value) throws FormatException,
 		IOException
 	{
-		extraOut.setOrder(isLittleEndian() ? ByteOrder.LITTLE_ENDIAN
-			: ByteOrder.BIG_ENDIAN);
-
+		extraOut.setLittleEndian(isLittleEndian());
+		
 		// convert singleton objects into arrays, for simplicity
 		if (value instanceof Short) {
 			value = new short[] { ((Short) value).shortValue() };
@@ -836,8 +835,7 @@ public class TiffSaver extends AbstractContextual {
 				final BytesLocation extraBuf = new BytesLocation(10000);
 				final DataHandle<Location> extraHandle = dataHandleService.create(
 					extraBuf);
-				extraHandle.setOrder(little ? ByteOrder.LITTLE_ENDIAN
-					: ByteOrder.BIG_ENDIAN);
+				extraHandle.setLittleEndian(little);
 				final TiffSaver saver = new TiffSaver(ifdHandle, ifdBuf);
 				saver.setLittleEndian(isLittleEndian());
 				saver.writeIFDValue(extraHandle, entry.getValueOffset(), tag, value);

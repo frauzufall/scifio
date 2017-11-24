@@ -1678,8 +1678,7 @@ public class TIFFFormat extends AbstractFormat {
 			final Metadata meta = getMetadata();
 			tiffSaver = new TiffSaver(getContext(), handle);
 
-			final Boolean bigEndian = !meta.get(imageIndex).isLittleEndian();
-			final boolean littleEndian = !bigEndian.booleanValue();
+			final boolean littleEndian = meta.get(imageIndex).isLittleEndian();
 
 			tiffSaver.setWritingSequentially(writeSequential());
 			tiffSaver.setLittleEndian(littleEndian);
