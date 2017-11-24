@@ -585,7 +585,7 @@ public class TiffSaver extends AbstractContextual {
 		if (bigTiff) out.writeLong(keyCount);
 		else out.writeShort(keyCount);
 
-		final BytesLocation extra = new BytesLocation(1_000_000);
+		final BytesLocation extra = new BytesLocation(1000); // NB: autoresizes
 		final DataHandle<Location> extraHandle = dataHandleService.create(extra);
 
 		for (final Integer key : keys) {
@@ -595,11 +595,12 @@ public class TiffSaver extends AbstractContextual {
 			final Object value = ifd.get(key);
 			writeIFDValue(extraHandle, ifdBytes + fp, key.intValue(), value);
 		}
-		if (bigTiff) out.seek(out.offset());
-		writeIntValue(out, nextOffset);
 
+		if (bigTiff) out.seek(out.offset()); // FIXME this is suspicious
+		writeIntValue(out, nextOffset);
+		final int ifdLen = (int) extraHandle.offset();
 		extraHandle.seek(0l);
-		DataHandles.copy(extraHandle, out);
+		DataHandles.copy(extraHandle, out, ifdLen);
 	}
 
 	/**
