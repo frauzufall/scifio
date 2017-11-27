@@ -418,7 +418,7 @@ public class MinimalTIFFFormat extends AbstractFormat {
 
 			final IFDList allIFDs = tiffParser.getIFDs();
 
-			if (allIFDs == null || allIFDs.size() == 0) {
+			if (allIFDs == null || allIFDs.isEmpty()) {
 				throw new FormatException("No IFDs found");
 			}
 

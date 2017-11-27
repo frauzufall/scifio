@@ -46,7 +46,6 @@ import java.util.TreeSet;
 import org.scijava.AbstractContextual;
 import org.scijava.Context;
 import org.scijava.io.handle.DataHandle;
-import org.scijava.io.handle.DataHandle.ByteOrder;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.handle.DataHandles;
 import org.scijava.io.location.BytesLocation;
@@ -585,22 +584,25 @@ public class TiffSaver extends AbstractContextual {
 		if (bigTiff) out.writeLong(keyCount);
 		else out.writeShort(keyCount);
 
-		final BytesLocation extra = new BytesLocation(1000); // NB: autoresizes
-		final DataHandle<Location> extraHandle = dataHandleService.create(extra);
+		final BytesLocation extra = new BytesLocation(0); // NB: autoresizes
+		try (final DataHandle<Location> extraHandle = dataHandleService.create(
+			extra))
+		{
+			for (final Integer key : keys) {
+				if (key.equals(IFD.LITTLE_ENDIAN) || key.equals(IFD.BIG_TIFF) || key
+					.equals(IFD.REUSE)) continue;
 
-		for (final Integer key : keys) {
-			if (key.equals(IFD.LITTLE_ENDIAN) || key.equals(IFD.BIG_TIFF) || key
-				.equals(IFD.REUSE)) continue;
+				final Object value = ifd.get(key);
+				writeIFDValue(extraHandle, ifdBytes + fp, key.intValue(), value);
+			}
 
-			final Object value = ifd.get(key);
-			writeIFDValue(extraHandle, ifdBytes + fp, key.intValue(), value);
+			if (bigTiff) out.seek(out.offset()); // FIXME this is suspicious, it
+																						// should not do anything
+			writeIntValue(out, nextOffset);
+			final int ifdLen = (int) extraHandle.offset();
+			extraHandle.seek(0l);
+			DataHandles.copy(extraHandle, out, ifdLen);
 		}
-
-		if (bigTiff) out.seek(out.offset()); // FIXME this is suspicious
-		writeIntValue(out, nextOffset);
-		final int ifdLen = (int) extraHandle.offset();
-		extraHandle.seek(0l);
-		DataHandles.copy(extraHandle, out, ifdLen);
 	}
 
 	/**
@@ -831,13 +833,13 @@ public class TiffSaver extends AbstractContextual {
 			final TiffIFDEntry entry = parser.readTiffIFDEntry();
 			if (entry.getTag() == tag) {
 				// write new value to buffers
-				final BytesLocation ifdBuf = new BytesLocation(bytesPerEntry);
-				final DataHandle<Location> ifdHandle = dataHandleService.create(ifdBuf);
-				final BytesLocation extraBuf = new BytesLocation(10000);
+				final DataHandle<Location> ifdHandle = dataHandleService.create(
+					new BytesLocation(bytesPerEntry));
 				final DataHandle<Location> extraHandle = dataHandleService.create(
-					extraBuf);
+					new BytesLocation(0));
 				extraHandle.setLittleEndian(little);
-				final TiffSaver saver = new TiffSaver(ifdHandle, ifdBuf);
+				final TiffSaver saver = new TiffSaver(ifdHandle, new BytesLocation(
+					bytesPerEntry));
 				saver.setLittleEndian(isLittleEndian());
 				saver.writeIFDValue(extraHandle, entry.getValueOffset(), tag, value);
 				ifdHandle.seek(0);
