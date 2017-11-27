@@ -718,7 +718,7 @@ public class PICTFormat extends AbstractFormat {
 				try (DataHandle<Location> compressedImages = dataHandleService.create(
 					new BytesLocation(b));
 						DataHandle<Location> decompressedImages = dataHandleService.create(
-							new BytesLocation(new ByteArrayByteBank(10000))))
+							new BytesLocation(b.length)))
 				{
 					for (final long jpegOffset : meta.getJpegOffsets()) {
 						compressedImages.seek(jpegOffset - meta.getJpegOffsets().get(0));

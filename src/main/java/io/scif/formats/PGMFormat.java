@@ -263,8 +263,7 @@ public class PGMFormat extends AbstractFormat {
 			}
 			else {
 				try (DataHandle<Location> bytes = dataHandleService.create(
-					new BytesLocation(new ByteArrayByteBank(10_000))))
-				// FIXME: what is a good value for this?
+					new BytesLocation(0))) // NB: a size of 0 means the handle will grow as needed
 				{
 
 					final boolean littleEndian = meta.get(imageIndex).isLittleEndian();
