@@ -39,7 +39,7 @@ import io.scif.SCIFIO;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**
@@ -61,7 +61,7 @@ public class FormatToolsTest {
 	 */
 	@Test
 	public void testDefaultMinMax() throws FormatException, IOException {
-		final Location sampleImage = new FileLocation(
+		final Location sampleImage = new DummyLocation(
 			"8bit-unsigned&pixelType=int8&indexed=true&planarDims=3&lengths=50,50,1&axes=X,Y,Channel.fake");
 
 		final Reader reader = scifio.initializer().initializeReader(sampleImage);

@@ -32,8 +32,6 @@ package io.scif.img;
 import io.scif.ByteArrayPlane;
 import io.scif.DefaultImageMetadata;
 import io.scif.DefaultMetadata;
-import io.scif.DefaultWriter;
-import io.scif.Format;
 import io.scif.FormatException;
 import io.scif.ImageMetadata;
 import io.scif.Metadata;

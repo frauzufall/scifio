@@ -43,7 +43,6 @@ import java.util.Vector;
 import org.scijava.AbstractContextual;
 import org.scijava.Context;
 import org.scijava.io.handle.DataHandle;
-import org.scijava.io.handle.DataHandle.ByteOrder;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.Location;
 import org.scijava.log.LogService;

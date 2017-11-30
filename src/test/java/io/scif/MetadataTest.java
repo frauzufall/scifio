@@ -42,7 +42,7 @@ import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 
 import org.junit.Test;
-import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**
@@ -54,10 +54,10 @@ public class MetadataTest {
 
 	private final SCIFIO scifio = new SCIFIO();
 
-	private final Location id = new FileLocation(
+	private final Location id = new DummyLocation(
 		"testImg&lengths=620,512,5,6,7&axes=X,Y,Time,Z,Channel.fake");
 
-	private final Location ndId = new FileLocation(
+	private final Location ndId = new DummyLocation(
 		"ndImg&axes=X,Y,Z,Channel,Time,Lifetime,Spectra,&lengths=256,128,2,6,10,4,8.fake");
 
 	/**
@@ -216,7 +216,7 @@ public class MetadataTest {
 	 */
 	@Test
 	public void testTrailingAxis() throws IOException, FormatException {
-		final Location id = new FileLocation(
+		final Location id = new DummyLocation(
 			"testImg&planarDims=2&lengths=620,512,1,&axes=X,Y,Time.fake");
 		final Metadata m = scifio.initializer().parseMetadata(id);
 
@@ -236,7 +236,7 @@ public class MetadataTest {
 	 */
 	@Test
 	public void testAxisCount() throws IOException, FormatException {
-		final Location id = new FileLocation(
+		final Location id = new DummyLocation(
 			"testImg&lengths=620,512,1,5,1&axes=X,Y,Time,Z,Channel.fake");
 		final Metadata m = scifio.initializer().parseMetadata(id);
 
@@ -249,7 +249,7 @@ public class MetadataTest {
 	 */
 	@Test
 	public void testAdjustingTrailingAxis() throws IOException, FormatException {
-		final Location id = new FileLocation(
+		final Location id = new DummyLocation(
 			"testImg&lengths=620,512,1&axes=X,Y,Time.fake");
 		final Metadata m = scifio.initializer().parseMetadata(id);
 

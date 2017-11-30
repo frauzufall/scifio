@@ -45,7 +45,7 @@ import org.junit.Test;
 import org.scijava.Context;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
-import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**
@@ -55,10 +55,10 @@ import org.scijava.io.location.Location;
  */
 public class CheckerTest {
 
-	private final Location id = new FileLocation(
+	private final Location id = new DummyLocation(
 		"8bit-signed&pixelType=int8&axes=X,Y,Z,C,T&lengths=50,50,3,5,7.fake");
 
-	private final Location falseId = new FileLocation("testFile.png");
+	private final Location falseId = new DummyLocation("testFile.png");
 
 	private Checker c;
 

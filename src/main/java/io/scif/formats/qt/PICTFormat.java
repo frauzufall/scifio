@@ -57,7 +57,6 @@ import net.imagej.axis.DefaultLinearAxis;
 import net.imglib2.display.ColorTable;
 import net.imglib2.display.ColorTable8;
 
-import org.scijava.io.ByteArrayByteBank;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.BytesLocation;

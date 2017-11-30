@@ -42,7 +42,6 @@ import io.scif.config.SCIFIOConfig;
 import io.scif.util.FormatTools;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

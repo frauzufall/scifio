@@ -39,7 +39,6 @@ import io.scif.config.SCIFIOConfig.ImgMode;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -56,6 +55,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.scijava.Context;
+import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.FileLocation;
 import org.scijava.io.location.Location;
 
@@ -77,8 +77,7 @@ public class ImgSaverTest {
 	public ImgSaverTest(final String format, final String lengths,
 		final String axes, final boolean checkUnits) throws IOException
 	{
-		id = new FileLocation(new File(Files.createTempDirectory("test").toFile(),
-			"testImg&lengths=" + lengths + "&axes=" + axes + ".fake"));
+		id = new DummyLocation("testImg&lengths=" + lengths + "&axes=" + axes + ".fake");
 		this.format = format;
 		this.checkUnits = checkUnits;
 	}

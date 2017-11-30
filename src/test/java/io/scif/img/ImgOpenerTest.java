@@ -65,7 +65,6 @@ import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.BytesLocation;
 import org.scijava.io.location.DummyLocation;
-import org.scijava.io.location.FileLocation;
 import org.scijava.io.location.Location;
 
 /**

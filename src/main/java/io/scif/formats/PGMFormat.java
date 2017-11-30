@@ -46,7 +46,6 @@ import java.util.StringTokenizer;
 
 import net.imagej.axis.Axes;
 
-import org.scijava.io.ByteArrayByteBank;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandle.ByteOrder;
 import org.scijava.io.handle.DataHandleService;

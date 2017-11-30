@@ -39,7 +39,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.scijava.InstantiableException;
-import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.DummyLocation;
+import org.scijava.io.location.Location;
 
 /**
  * Tests for {@link PlaneSeparator}.
@@ -50,7 +51,7 @@ public class PlaneSeparatorTest {
 
 	private final SCIFIO scifio = new SCIFIO();
 
-	private final FileLocation id = new FileLocation(
+	private final Location id = new DummyLocation(
 		"testImg&lengths=3,4,512,512&axes=Channel,Time,X,Y.fake");
 
 	/**
