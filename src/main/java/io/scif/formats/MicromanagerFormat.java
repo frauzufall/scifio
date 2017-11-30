@@ -224,11 +224,11 @@ public class MicromanagerFormat extends AbstractFormat {
 		private boolean checkMetadataHandle(final DataHandle<Location> handle)
 			throws IOException
 		{
+			if (!handle.exists()) return false;
 			final int blockSize = 1048576;
 
 			final long length = handle.length();
 			final String data = handle.readString((int) Math.min(blockSize, length));
-			handle.close();
 			return length > 0 && (data.contains("Micro-Manager") || data.contains(
 				"micromanager"));
 		}
