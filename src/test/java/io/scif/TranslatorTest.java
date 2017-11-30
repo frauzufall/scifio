@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
 import io.scif.filters.MetadataWrapper;
 import io.scif.filters.PlaneSeparator;
 import io.scif.filters.ReaderFilter;
-import io.scif.formats.FakeFormat;
+import io.scif.formats.TestImgFormat;
 import io.scif.formats.ICSFormat;
 import io.scif.services.TranslatorService;
 
@@ -136,7 +136,7 @@ public class TranslatorTest {
 	@Test
 	public void testHasTranslator() {
 		final Translator t = scifio.translator().findTranslator(
-			io.scif.Metadata.class, FakeFormat.Metadata.class, true);
+			io.scif.Metadata.class, TestImgFormat.Metadata.class, true);
 		assertNotNull(t);
 	}
 }

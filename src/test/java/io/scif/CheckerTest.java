@@ -35,7 +35,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import io.scif.config.SCIFIOConfig;
-import io.scif.formats.FakeFormat;
+import io.scif.formats.TestImgFormat;
 
 import java.io.IOException;
 
@@ -194,7 +194,7 @@ public class CheckerTest {
 		@Override
 		public Format getFormat() {
 			final SCIFIO scifio = new SCIFIO(getContext());
-			return scifio.format().getFormatFromClass(FakeFormat.class);
+			return scifio.format().getFormatFromClass(TestImgFormat.class);
 		}
 	}
 }
