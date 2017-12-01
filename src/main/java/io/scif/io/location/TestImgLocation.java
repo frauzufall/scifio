@@ -30,18 +30,40 @@
 package io.scif.io.location;
 
 import io.scif.MetadataService;
+import io.scif.formats.TestImgFormat;
 import io.scif.util.FormatTools;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.scijava.io.location.AbstractLocation;
+import org.scijava.io.location.Location;
 
 /**
- * A { link Location} for specifying virtual test images, to be used in
- * combination with { link FakeFormat}. author Gabriel Einsdorf
+ * A {@link Location} for specifying virtual test images, to be used in
+ * combination with {@link TestImgFormat}. Allows setting the Metadata which
+ * will be read and interpreted by the {@link TestImgFormat}.
+ * <p>
+ * To create a {@link TestImgLocation} use the {@link Builder} as follows:
+ * 
+ * <pre>
+ * TestImgLocation.Builder b = new Builder();
+ * b.axes("X", "Y", "Z"); // set new axis names
+ * b.lengths(100, 100, 3); // set new axis lengths
+ * Location loc = b.build(); // build the final location
+ * </pre>
+ * 
+ * @author Gabriel Einsdorf
  */
 public class TestImgLocation extends AbstractLocation {
+
+	public static Builder builder() {
+		return new Builder();
+	}
+	
+	public static TestImgLocation defaultTestImg() {
+		return new Builder().build();
+	}
 
 	public static class Builder {
 
