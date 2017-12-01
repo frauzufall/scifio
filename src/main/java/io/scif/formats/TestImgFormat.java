@@ -89,8 +89,6 @@ public class TestImgFormat extends AbstractFormat {
 
 	private static final long SEED = 0xcafebabe;
 
-	private static final String DEFAULT_NAME = "Untitled";
-
 	// -- Constructor --
 
 	public TestImgFormat() {
@@ -101,7 +99,7 @@ public class TestImgFormat extends AbstractFormat {
 
 	@Override
 	protected String[] makeSuffixArray() {
-		return new String[] {};
+		return new String[] { "scifiotestimg" };
 	}
 
 	// -- Nested Classes --
@@ -384,13 +382,6 @@ public class TestImgFormat extends AbstractFormat {
 		@Override
 		public boolean isFormat(final Location loc) {
 			return loc instanceof TestImgLocation;
-		}
-
-		@Override
-		public boolean isFormat(final DataHandle<Location> stream)
-			throws IOException
-		{
-			return stream.get() instanceof TestImgLocation;
 		}
 	}
 
