@@ -34,9 +34,11 @@ import static org.junit.Assert.assertNull;
 
 import io.scif.img.IO;
 import io.scif.img.SCIFIOImgPlus;
+import io.scif.io.location.TestImgLocation;
 
 import org.junit.Test;
 import org.scijava.io.location.DummyLocation;
+import org.scijava.io.location.Location;
 
 /**
  * Tests for the {@link SCIFIOCellImg} and related classes.
@@ -52,8 +54,10 @@ public class SCIFIOCellImgTest {
 	@Test
 	public void testReaderCleanup() {
 		// Make an id that will trigger cell creation
-		final String id = "lotsofplanes&axes=X,Y,Z&lengths=256,256,100000.fake";
-		final SCIFIOImgPlus<?> img = IO.openImgs(new DummyLocation(id)).get(0);
+		TestImgLocation loc = TestImgLocation.builder().name("lotsofplanes").axes(
+			"X", "Y", "Z").lengths(256, 256, 100000).build();
+		final SCIFIOImgPlus<?> img = IO.openImgs(loc).get(0);
+
 		assertNotNull(((SCIFIOCellImg) img.getImg()).reader().getMetadata());
 		img.dispose();
 		assertNull(((SCIFIOCellImg) img.getImg()).reader().getMetadata());

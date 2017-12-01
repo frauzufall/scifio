@@ -36,6 +36,7 @@ import static org.junit.Assert.assertTrue;
 
 import io.scif.config.SCIFIOConfig;
 import io.scif.formats.TestImgFormat;
+import io.scif.io.location.TestImgLocation;
 
 import java.io.IOException;
 
@@ -55,8 +56,9 @@ import org.scijava.io.location.Location;
  */
 public class CheckerTest {
 
-	private final Location id = new DummyLocation(
-		"8bit-signed&pixelType=int8&axes=X,Y,Z,C,T&lengths=50,50,3,5,7.fake");
+	private final Location id = new TestImgLocation.Builder().name("8bit-signed")
+		.pixelType("int8").axes("X", "Y", "Z", "C", "T").lengths(50, 50, 4, 5, 7)
+		.build();
 
 	private final Location falseId = new DummyLocation("testFile.png");
 
@@ -184,12 +186,9 @@ public class CheckerTest {
 		// -- HasFormat Methods --
 
 		// When extending an existing component, the getFormat() method should
-		// be
-		// overriden to ensure
-		// the proper format is returned.
+		// be overriden to ensure the proper format is returned.
 		// FIXME: index over all components? make Format.createComponent work
-		// more
-		// like services where
+		// more like services where
 		// you can have a list of components returned... maybe? Or not..
 		@Override
 		public Format getFormat() {

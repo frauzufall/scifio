@@ -43,6 +43,7 @@ import io.scif.img.cell.SCIFIOCell;
 import io.scif.img.cell.SCIFIOCellCache;
 import io.scif.img.cell.loaders.ByteArrayLoader;
 import io.scif.img.cell.loaders.SCIFIOArrayLoader;
+import io.scif.io.location.TestImgLocation;
 import io.scif.util.MemoryTools;
 
 import java.io.IOException;
@@ -454,7 +455,7 @@ public class CacheServiceTest {
 	// return a fake id for a file of the specified size
 	private Location makeFakeFile(final long bytes) {
 		final long dim = Math.round(Math.sqrt(bytes));
-		return new DummyLocation("testImg&lengths=" + dim + "," + dim + ".fake");
+		return new TestImgLocation.Builder().lengths(dim, dim).build();
 	}
 
 	// Creates a SCIFIOCellCache anonymously for a file of the specified size

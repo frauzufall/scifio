@@ -37,6 +37,7 @@ import io.scif.Metadata;
 import io.scif.Plane;
 import io.scif.Reader;
 import io.scif.config.SCIFIOConfig;
+import io.scif.io.location.TestImgLocation;
 import io.scif.services.FilePatternService;
 import io.scif.services.InitializeService;
 import io.scif.util.FormatTools;
@@ -305,8 +306,8 @@ public class FileStitcher extends AbstractReaderFilter {
 
 				// TODO remove this when virtual handle is in use
 				// HACK: skip file existence check for fake files
-				if (file instanceof DummyLocation || file.getName().toLowerCase()
-					.endsWith(".fake")) continue;
+				if (file instanceof DummyLocation || file instanceof TestImgLocation)
+					continue;
 
 				if (!dataHandleService.handleExists(file)) {
 					throw new FormatException("File #" + i + " (" + file +

@@ -159,12 +159,9 @@ public class TestImgFormatTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testMisMatchedLengths() throws FormatException, IOException {
-		final Location moreLengths = new DummyLocation(
-			"8bit-unsigned&pixelType=uint8lengths=50,50,4,7,12&axes=X,Y,Channel.fake");
-
-		final Location sampleImage = new TestImgLocation.Builder().name(
+		final Location moreLengths = new TestImgLocation.Builder().name(
 			"8bit-unsigned").pixelType("uint8").indexed(true).planarDims(3).lengths(
-				50, 50, 3, 4).axes("X", "Y", "Channel").build();
+				50, 50, 4, 7, 12).axes("X", "Y", "Channel").build();
 
 		scifio.initializer().parseMetadata(moreLengths);
 	}

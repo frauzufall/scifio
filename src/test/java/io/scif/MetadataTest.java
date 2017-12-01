@@ -34,6 +34,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import io.scif.img.axes.SCIFIOAxes;
+import io.scif.io.location.TestImgLocation;
 import io.scif.util.FormatTools;
 
 import java.io.IOException;
@@ -54,11 +55,12 @@ public class MetadataTest {
 
 	private final SCIFIO scifio = new SCIFIO();
 
-	private final Location id = new DummyLocation(
-		"testImg&lengths=620,512,5,6,7&axes=X,Y,Time,Z,Channel.fake");
+	private final Location id = new TestImgLocation.Builder().name("testImg")
+		.lengths(620, 512, 5, 6, 7).axes("X", "Y", "Time", "Z", "Channel").build();
 
-	private final Location ndId = new DummyLocation(
-		"ndImg&axes=X,Y,Z,Channel,Time,Lifetime,Spectra,&lengths=256,128,2,6,10,4,8.fake");
+	private final Location ndId = new TestImgLocation.Builder().name("ndImg")
+		.axes("X", "Y", "Z", "Channel", "Time", "Lifetime", "Spectra").lengths(256,
+			128, 2, 6, 10, 4, 8).build();
 
 	/**
 	 * Down the middle test that verifies each method of the Metadata API.
@@ -216,8 +218,8 @@ public class MetadataTest {
 	 */
 	@Test
 	public void testTrailingAxis() throws IOException, FormatException {
-		final Location id = new DummyLocation(
-			"testImg&planarDims=2&lengths=620,512,1,&axes=X,Y,Time.fake");
+		final Location id = new TestImgLocation.Builder().planarDims(2).lengths(620,
+			512, 1).axes("X", "Y", "Time").build();
 		final Metadata m = scifio.initializer().parseMetadata(id);
 
 		assertEquals(2, m.get(0).getAxes().size());
@@ -236,8 +238,8 @@ public class MetadataTest {
 	 */
 	@Test
 	public void testAxisCount() throws IOException, FormatException {
-		final Location id = new DummyLocation(
-			"testImg&lengths=620,512,1,5,1&axes=X,Y,Time,Z,Channel.fake");
+		final Location id = new TestImgLocation.Builder().name("testImg").lengths(
+			620, 512, 1, 5, 1).axes("X", "Y", "Time", "Z", "Channel").build();
 		final Metadata m = scifio.initializer().parseMetadata(id);
 
 		assertEquals(4, m.get(0).getAxes().size());
@@ -249,8 +251,8 @@ public class MetadataTest {
 	 */
 	@Test
 	public void testAdjustingTrailingAxis() throws IOException, FormatException {
-		final Location id = new DummyLocation(
-			"testImg&lengths=620,512,1&axes=X,Y,Time.fake");
+		final Location id = new TestImgLocation.Builder().name("testImg").lengths(
+			620, 512, 1).axes("X", "Y", "Time").build();
 		final Metadata m = scifio.initializer().parseMetadata(id);
 
 		assertEquals(2, m.get(0).getAxes().size());

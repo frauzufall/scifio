@@ -35,6 +35,7 @@ import io.scif.FormatException;
 import io.scif.ImageMetadata;
 import io.scif.Reader;
 import io.scif.SCIFIO;
+import io.scif.io.location.TestImgLocation;
 
 import java.io.IOException;
 
@@ -61,8 +62,10 @@ public class FormatToolsTest {
 	 */
 	@Test
 	public void testDefaultMinMax() throws FormatException, IOException {
-		final Location sampleImage = new DummyLocation(
-			"8bit-unsigned&pixelType=int8&indexed=true&planarDims=3&lengths=50,50,1&axes=X,Y,Channel.fake");
+
+		final Location sampleImage = TestImgLocation.builder().name("8bit-unsigned")
+			.pixelType("int8").indexed(true).planarDims(3).lengths(50, 50, 1).axes(
+				"X", "Y", "Channel").build();
 
 		final Reader reader = scifio.initializer().initializeReader(sampleImage);
 		final ImageMetadata iMeta = reader.getMetadata().get(0);

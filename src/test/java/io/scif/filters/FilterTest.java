@@ -36,6 +36,7 @@ import io.scif.FormatException;
 import io.scif.Reader;
 import io.scif.SCIFIO;
 import io.scif.config.SCIFIOConfig;
+import io.scif.io.location.TestImgLocation;
 
 import java.io.IOException;
 
@@ -57,7 +58,8 @@ public class FilterTest {
 
 	private final SCIFIO scifio = makeSCIFIO();
 
-	private final Location id = new DummyLocation("testImg&lengths=512,512.fake");
+	private final Location id = new TestImgLocation.Builder().name("testImg")
+		.lengths(512, 512).build();
 
 	private Reader readerFilter;
 
@@ -89,8 +91,8 @@ public class FilterTest {
 	 */
 	@Test
 	public void testSetSource() throws FormatException, IOException {
-		final Location id2 = new DummyLocation(
-			"testImg&lengths=256,128,5&axes=X,Y,Time.fake");
+		final Location id2 = new TestImgLocation.Builder().name("testImg").lengths(
+			256, 128,5).axes("X", "Y", "Time").build();
 
 		readerFilter = scifio.initializer().initializeReader(id, new SCIFIOConfig()
 			.checkerSetOpen(true));

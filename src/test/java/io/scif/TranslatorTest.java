@@ -37,8 +37,9 @@ import static org.junit.Assert.assertTrue;
 import io.scif.filters.MetadataWrapper;
 import io.scif.filters.PlaneSeparator;
 import io.scif.filters.ReaderFilter;
-import io.scif.formats.TestImgFormat;
 import io.scif.formats.ICSFormat;
+import io.scif.formats.TestImgFormat;
+import io.scif.io.location.TestImgLocation;
 import io.scif.services.TranslatorService;
 
 import java.io.File;
@@ -50,6 +51,7 @@ import net.imagej.axis.Axes;
 import org.junit.Before;
 import org.junit.Test;
 import org.scijava.io.location.FileLocation;
+import org.scijava.io.location.Location;
 
 /**
  * Unit tests for {@link io.scif.Translator} interface methods.
@@ -59,16 +61,16 @@ import org.scijava.io.location.FileLocation;
 public class TranslatorTest {
 
 	private final SCIFIO scifio = new SCIFIO();
-	private FileLocation in;
+	private Location in;
 	private FileLocation out;
 
 	@Before
 	public void setup() throws IOException {
-		final String id =
-			"interleaved&pixelType=int8&axes=Channel,X,Y,Z&lengths=3,256,256,5.fake";
+		in = TestImgLocation.builder().name("interleaved").pixelType("int8").axes(
+			"Channel", "X", "Y", "Z").lengths(3, 256, 256, 5).build();
+
 		final String outid = "testFile.ics";
-		File testDir = Files.createTempDirectory("scifio-tests").toFile();
-		in = new FileLocation(new File(testDir, id));
+		final File testDir = Files.createTempDirectory("scifio-tests").toFile();
 		out = new FileLocation(new File(testDir, outid));
 	}
 
