@@ -63,6 +63,7 @@ import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.BytesLocation;
 import org.scijava.io.location.Location;
+import org.scijava.util.ByteArray;
 
 /**
  * Tests for {@link StratecPQCTFormat}
@@ -340,7 +341,7 @@ public class StratecPQCTFormatTest {
 	private DataHandle<Location> createTestHandle(final int size,
 		final String name)
 	{
-		return handles.create(new BytesLocation(size) {
+		return handles.create(new BytesLocation(new ByteArray(size)) {
 
 			@Override
 			public String getName() {
