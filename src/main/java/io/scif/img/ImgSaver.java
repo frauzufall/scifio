@@ -464,7 +464,7 @@ public class ImgSaver extends AbstractImgIOComponent {
 
 	/**
 	 * Intermediate {@link #writeImg} method. Creates a {@link Writer} for the
-	 * given id.
+	 * given id, based on the file extension.
 	 */
 	private Metadata writeImg(final Location id, final SCIFIOImgPlus<?> imgPlus,
 		final int imageIndex, final SCIFIOConfig config, final int sliceCount)
@@ -771,8 +771,8 @@ public class ImgSaver extends AbstractImgIOComponent {
 		final long[] lengths = Arrays.copyOfRange(dimensions, 2, dimensions.length);
 
 		// Get non-X,Y position array
-		final long[] planePosition =
-			FormatTools.rasterToPosition(lengths, cIndex + (planeIndex * rgbChannelCount));
+		final long[] planePosition = FormatTools.rasterToPosition(lengths, cIndex +
+			(planeIndex * rgbChannelCount));
 
 		// Copy plane positions back to dimensions array and set X, Y to start
 		// at 0
