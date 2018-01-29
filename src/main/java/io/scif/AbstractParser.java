@@ -33,9 +33,7 @@ import io.scif.config.SCIFIOConfig;
 import io.scif.util.SCIFIOMetadataTools;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.scijava.io.handle.DataHandle;
@@ -116,14 +114,13 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 
 	@Override
 	public Location[] getUsedFiles(final boolean noPixels) {
-		final List<Location> files = new ArrayList<>();
+		final Set<Location> files = new HashSet<>();
 		for (int i = 0; i < metadata.getImageCount(); i++) {
 			final Location[] s = getImageUsedFiles(i, noPixels);
 			if (s != null) {
 				for (final Location file : s) {
-					if (!files.contains(file)) {
-						files.add(file);
-					}
+					// Set takes care of duplicates
+					files.add(file);
 				}
 			}
 		}
@@ -193,7 +190,21 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 			}
 		}
 
-		if (handle == null) handle = handles.create(loc);
+		if (handle == null) {
+			handle = handles.create(loc);
+			if (handle == null) {
+				// no handle found for this location, this is expected for
+				// "Location-only" formats
+				meta.setFiltered(config.parserIsFiltered());
+				if (meta.getContext() == null) meta.setContext(getContext());
+				meta.setDatasetName(loc.getName());
+				metadata = meta;
+
+				meta.populateImageMetadata();
+
+				return meta;
+			}
+		}
 
 		return parse(handle, meta, config);
 	}
@@ -215,8 +226,9 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 		}
 
 		// TODO relying on Abstract-level API
+		// TODO move as much functionality up as possible
 		meta.setFiltered(config.parserIsFiltered());
-		if (meta.getContext() == null) metadata.setContext(getContext());
+		if (meta.getContext() == null) meta.setContext(getContext());
 		meta.setSource(handle);
 		meta.setDatasetName(handle.get().getName());
 
@@ -249,17 +261,18 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 	 * layer, Override {@code #parse(String, TypedMetadata)} instead.
 	 * </p>
 	 */
-	protected abstract void typedParse(DataHandle<Location> stream, M meta,
+	protected abstract void typedParse(DataHandle<Location> handle, M meta,
 		SCIFIOConfig config) throws IOException, FormatException;
 
 	/* Sets the input stream for this parser if provided a new stream */
-	private void init(final DataHandle<Location> stream) throws IOException {
+	private void init(final DataHandle<Location> handle) throws IOException {
+		// FIXME: not clear what this does!
 
 		// Check to see if the stream is already open
 		if (getMetadata() != null) {
 			final Location[] usedFiles = getUsedFiles();
 			for (final Location fileName : usedFiles) {
-				if (stream.get().equals(fileName)) return;
+				if (handle.get().equals(fileName)) return;
 			}
 		}
 
