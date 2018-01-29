@@ -116,8 +116,8 @@ public class ImgSaverTest {
 //		o.add(new Object[] { ".png", "100,100,3,2", "X,Y,Time,Channel", false });
 
 // PNG working
-//		o.add(new Object[] { ".png", "100,100,3", "X,Y,Time", false });
-//		o.add(new Object[] { ".png", "100,100", "X,Y", false });
+		o.add(new Object[] { ".png", "100,100,3", "X,Y,Time", false });
+		o.add(new Object[] { ".png", "100,100", "X,Y", false });
 
 		// ICS //
 
@@ -212,6 +212,7 @@ public class ImgSaverTest {
 	{
 		final SCIFIOConfig config = new SCIFIOConfig().imgOpenerSetImgModes(
 			ImgMode.PLANAR);
+		config.put("buffer", true);
 
 		testPlaneSavingForConfig(config);
 	}

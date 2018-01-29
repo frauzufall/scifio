@@ -60,7 +60,7 @@ public class CheckerTest {
 		.pixelType("int8").axes("X", "Y", "Z", "C", "T").lengths(50, 50, 4, 5, 7)
 		.build();
 
-	private final Location falseId = new DummyLocation("testFile.png");
+	private final Location falseId = new DummyLocation();
 
 	private Checker c;
 

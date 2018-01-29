@@ -116,7 +116,7 @@
 
 		<imglib2.version>4.2.1</imglib2.version>
 		<mapdb.version>1.0.3</mapdb.version>
-		<scijava-common.version>2.67.1-SNAPSHOT</scijava-common.version>
+		<scijava-common.version>2.69.1-SNAPSHOT</scijava-common.version>
 		<enforcer.skip>true</enforcer.skip>
 	</properties>
 

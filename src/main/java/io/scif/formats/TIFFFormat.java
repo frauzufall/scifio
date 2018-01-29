@@ -1453,7 +1453,7 @@ public class TIFFFormat extends AbstractFormat {
 						.get()))
 					{
 						if (tmp.length() == 0) {
-							synchronized (this) {
+							synchronized (this) { // FIXME this seems superfluous
 								// write TIFF header
 								tiffSaver.writeHeader();
 							}

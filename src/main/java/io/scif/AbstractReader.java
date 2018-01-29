@@ -259,8 +259,10 @@ public abstract class AbstractReader<M extends TypedMetadata, P extends DataPlan
 		}
 
 		close();
-		final DataHandle<Location> stream = handles.create(loc);
+
+		// setting a new source
 		try {
+			final DataHandle<Location> stream = handles.readBuffer(loc);
 			setMetadata(getFormat().createParser().parse(stream, config));
 			setSource(stream);
 		}
