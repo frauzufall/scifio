@@ -94,11 +94,6 @@ public class CheckerTest {
 		isFormat = c.isFormat(id, new SCIFIOConfig().checkerSetOpen(true));
 		assertTrue(isFormat);
 
-		final DataHandle<Location> stream = dataHandleService.create(id);
-		isFormat = c.isFormat(stream);
-		assertFalse(isFormat);
-		stream.close();
-
 		isFormat = c.isFormat(falseId, new SCIFIOConfig().checkerSetOpen(false));
 		assertFalse(isFormat);
 	}
@@ -113,22 +108,32 @@ public class CheckerTest {
 
 	@Test
 	public void suffixSufficientTests() throws IOException {
-		fc.setSuffixSufficient(false);
+
+		// test with suffix sufficient
+		fc.setSuffixSufficient(true);
 		boolean isFormat = false;
 
 		isFormat = fc.isFormat(id);
 		assertTrue(isFormat);
 
 		isFormat = fc.isFormat(id, new SCIFIOConfig().checkerSetOpen(false));
-		assertFalse(isFormat);
+		assertTrue(isFormat);
 
 		isFormat = fc.isFormat(id, new SCIFIOConfig().checkerSetOpen(true));
 		assertTrue(isFormat);
 
-		final DataHandle<Location> stream = dataHandleService.create(id);
-		isFormat = fc.isFormat(stream);
-		assertTrue(isFormat);
-		stream.close();
+		// test with suffix not sufficient
+		// will return false because we can not open handles on TestImgLocation
+		fc.setSuffixSufficient(false);
+
+		isFormat = fc.isFormat(id);
+		assertFalse(isFormat);
+
+		isFormat = fc.isFormat(id, new SCIFIOConfig().checkerSetOpen(false));
+		assertFalse(isFormat);
+
+		isFormat = fc.isFormat(id, new SCIFIOConfig().checkerSetOpen(true));
+		assertFalse(isFormat);
 
 		isFormat = fc.checkHeader(id.getName().getBytes());
 		assertTrue(isFormat);
