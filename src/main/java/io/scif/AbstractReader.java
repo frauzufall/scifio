@@ -37,6 +37,7 @@ import java.io.IOException;
 
 import net.imagej.axis.Axes;
 
+import org.scijava.io.handle.AbstractHigherOrderHandle;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.Location;
@@ -172,7 +173,7 @@ public abstract class AbstractReader<M extends TypedMetadata, P extends DataPlan
 
 	@Override
 	public Location getCurrentFile() {
-		return getHandle() == null ? null : getHandle().get();
+		return metadata == null ? null : metadata.getSourceLocation();
 	}
 
 	@Override
@@ -251,7 +252,7 @@ public abstract class AbstractReader<M extends TypedMetadata, P extends DataPlan
 		throws IOException
 	{
 
-		if (getHandle() != null && getHandle().get() != null && getHandle().get()
+		if (getHandle() != null && getCurrentFile() != null && getCurrentFile()
 			.equals(loc))
 		{
 			getHandle().seek(0);
@@ -262,9 +263,16 @@ public abstract class AbstractReader<M extends TypedMetadata, P extends DataPlan
 
 		// setting a new source
 		try {
+			// TODO add option to not buffer?
 			final DataHandle<Location> stream = handles.readBuffer(loc);
-			setMetadata(getFormat().createParser().parse(stream, config));
-			setSource(stream);
+			if (stream == null) {
+				// loc only
+				setMetadata(getFormat().createParser().parse(loc, config));
+			}
+			else {
+				setMetadata(getFormat().createParser().parse(stream, config));
+				setSource(stream);
+			}
 		}
 		catch (final FormatException e) {
 			throw new IOException(e);
@@ -275,8 +283,7 @@ public abstract class AbstractReader<M extends TypedMetadata, P extends DataPlan
 	public void setSource(final DataHandle<Location> handle,
 		final SCIFIOConfig config) throws IOException
 	{
-		final Location currentSource = getHandle() == null ? null : getHandle()
-			.get();
+		final Location currentSource = getCurrentFile();
 		final Location newSource = handle.get();
 		if (metadata != null && (currentSource == null || newSource == null ||
 			!currentSource.equals(newSource))) close();

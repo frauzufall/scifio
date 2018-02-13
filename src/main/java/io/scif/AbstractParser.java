@@ -103,8 +103,14 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 	}
 
 	@Override
+	public Location getSourceLocation() {
+		return getMetadata() == null ? null : getMetadata().getSourceLocation();
+	}
+
+	@Override
 	public void updateSource(final Location source) throws IOException {
-		metadata.setSource(handles.create(source));
+		metadata.setSourceLocation(source);
+		metadata.setSource(handles.readBuffer(source));
 	}
 
 	@Override
@@ -136,7 +142,8 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 	public Location[] getImageUsedFiles(final int imageIndex,
 		final boolean noPixels)
 	{
-		return noPixels ? null : new Location[] { getMetadata().getSource().get() };
+		return noPixels ? null : new Location[] { getMetadata()
+			.getSourceLocation() };
 	}
 
 	@Override
@@ -179,6 +186,7 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 	{
 		DataHandle<Location> handle = getSource();
 
+		// reset / change the internal handle
 		if (handle != null) {
 			if (handle.get().equals(loc)) {
 				handle.seek(0);
@@ -190,22 +198,22 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 			}
 		}
 
-		if (handle == null) {
-			handle = handles.create(loc);
+		// set basic info
+		meta.setFiltered(config.parserIsFiltered());
+		if (meta.getContext() == null) meta.setContext(getContext());
+		meta.setDatasetName(loc.getName());
+		metadata = meta;
+		meta.setSourceLocation(loc);
+
+		if (handle == null) { // no source set or source changed
+			handle = handles.readBuffer(loc);
 			if (handle == null) {
-				// no handle found for this location, this is expected for
+				// no handle found for this location, expected for
 				// "Location-only" formats
-				meta.setFiltered(config.parserIsFiltered());
-				if (meta.getContext() == null) meta.setContext(getContext());
-				meta.setDatasetName(loc.getName());
-				metadata = meta;
-
 				meta.populateImageMetadata();
-
 				return meta;
 			}
 		}
-
 		return parse(handle, meta, config);
 	}
 
@@ -224,19 +232,17 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 				// annotations
 			}
 		}
-
-		// TODO relying on Abstract-level API
-		// TODO move as much functionality up as possible
+		// we need to set this here, because we can not know if parse(Location) was
+		// called before.
 		meta.setFiltered(config.parserIsFiltered());
 		if (meta.getContext() == null) meta.setContext(getContext());
-		meta.setSource(handle);
 		meta.setDatasetName(handle.get().getName());
-
+		meta.setSource(handle);
+		meta.setSourceLocation(handle.get());
 		metadata = meta;
+
 		typedParse(handle, meta, config);
-
 		meta.populateImageMetadata();
-
 		return meta;
 	}
 
@@ -266,7 +272,6 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 
 	/* Sets the input stream for this parser if provided a new stream */
 	private void init(final DataHandle<Location> handle) throws IOException {
-		// FIXME: not clear what this does!
 
 		// Check to see if the stream is already open
 		if (getMetadata() != null) {
@@ -287,8 +292,8 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 			infos[i].filename = files[i].getName();
 			infos[i].reader = getFormat().getReaderClass();
 			// FIXME is this logic correct?
-			infos[i].usedToInitialize = files[i].getName().endsWith(getSource().get()
-				.getName());
+			infos[i].usedToInitialize = files[i].getName().endsWith(
+				getSourceLocation().getName());
 		}
 		return infos;
 	}

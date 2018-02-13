@@ -629,7 +629,7 @@ public final class FormatTools {
 		final int imageIndex, final long planeIndex, final int bufLength,
 		final long[] planeMin, final long[] planeMax) throws FormatException
 	{
-		assertId(m.getSource(), true, 2);
+		assertId(m.getSourceLocation(), true, 2);
 		checkPlaneForWriting(m, imageIndex, planeIndex, bufLength, planeMin,
 			planeMax);
 	}

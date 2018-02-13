@@ -147,9 +147,14 @@ public interface Parser extends HasFormat, HasSource, Groupable {
 	Metadata getMetadata();
 
 	/**
-	 * @return The last input stream read by this parser.
+	 * @return The last {@link DataHandle} read by this parser.
 	 */
 	DataHandle<Location> getSource();
+
+	/**
+	 * @return The last Location read from by this parser.
+	 */
+	Location getSourceLocation();
 
 	/**
 	 * Updates the source being operated on by this parser (e.g. in multi-file
@@ -196,4 +201,5 @@ public interface Parser extends HasFormat, HasSource, Groupable {
 	 * Metadata collection.
 	 */
 	Set<MetadataLevel> getSupportedMetadataLevels();
+
 }

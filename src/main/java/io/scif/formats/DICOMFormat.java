@@ -972,7 +972,7 @@ public class DICOMFormat extends AbstractFormat {
 			for (final BrowsableLocation f : files) {
 				log().debug("Checking file " + f);
 
-				if (!f.equals(getSource().get()) && getFormat().createChecker()
+				if (!f.equals(getSourceLocation()) && getFormat().createChecker()
 					.isFormat(f) && Arrays.binarySearch(patternFiles, f.getName()
 						.replaceAll("\\\\", "\\\\\\\\")) >= 0)
 				{

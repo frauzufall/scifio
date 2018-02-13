@@ -105,7 +105,7 @@ public abstract class AbstractReaderFilter extends AbstractFilter<Reader>
 		final SCIFIOConfig config) throws IOException
 	{
 		final Location filterSource = getMetadata() == null ? null : getMetadata()
-			.getSource().get();
+			.getSourceLocation();
 
 		if (filterSource == null || !filterSource.equals(source)) {
 			setMetadata(getParent().getMetadata());

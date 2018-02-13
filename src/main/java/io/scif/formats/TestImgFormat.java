@@ -248,7 +248,7 @@ public class TestImgFormat extends AbstractFormat {
 				MetadataService.class);
 
 			// parse key/value pairs from fake filename
-			final Map<String, Object> fakeMap = ((TestImgLocation) getSource().get())
+			final Map<String, Object> fakeMap = ((TestImgLocation) getSourceLocation())
 				.getMetadataMap();
 
 			metadataService.populate(this, fakeMap);

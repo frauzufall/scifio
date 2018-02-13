@@ -95,6 +95,7 @@ public abstract class AbstractChecker extends AbstractHasFormat implements
 		// contents
 		if (!open) return false; // not allowed to open any files
 		try (DataHandle<Location> handle = handles.create(loc)) {
+			if (handle == null) return false;
 			return isFormat(handle);
 		}
 		catch (final IOException exc) {

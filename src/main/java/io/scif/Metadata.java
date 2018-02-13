@@ -71,6 +71,21 @@ public interface Metadata extends Serializable, HasFormat, HasSource,
 	DataHandle<Location> getSource();
 
 	/**
+	 * Sets the input source location. This is an alternative to
+	 * {@link #setSource(DataHandle)} for Formats that operate on Locations
+	 * without a corresponding {@link DataHandle}.
+	 *
+	 * @param loc the source location
+	 */
+	void setSourceLocation(Location loc);
+
+	/**
+	 * @return the source location, in most cases this is equivalent to calling
+	 *         {@link #getSource()}.get()
+	 */
+	Location getSourceLocation();
+
+	/**
 	 * Returns whether or not filterMetadata was set when parsing this Metadata
 	 * object.
 	 *

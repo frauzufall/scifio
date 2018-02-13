@@ -173,8 +173,6 @@ public class TIFFJAIFormat extends AbstractFormat {
 
 			meta.setUniverse(r);
 
-			final String id = stream.get().getName();
-
 			log().info("Reading movie dimensions");
 
 			// map Location to File or RandomAccessFile, if possible
