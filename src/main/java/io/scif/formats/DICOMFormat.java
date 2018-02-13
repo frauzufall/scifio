@@ -471,11 +471,11 @@ public class DICOMFormat extends AbstractFormat {
 		public boolean isFormat(final DataHandle<Location> handle)
 			throws IOException
 		{
-			final int blockLen = 2048;
-			if (!FormatTools.validStream(handle, blockLen, true)) return false;
-
 			// NB: we need to be able look at the companion files.
 			if (!(handle.get() instanceof BrowsableLocation)) return false;
+
+			final int blockLen = 2048;
+			if (!FormatTools.validStream(handle, blockLen, true)) return false;
 
 			handle.seek(128);
 			if (handle.readString(4).equals(DICOM_MAGIC_STRING)) return true;
