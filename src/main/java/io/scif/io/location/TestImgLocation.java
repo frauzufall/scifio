@@ -33,8 +33,14 @@ import io.scif.MetadataService;
 import io.scif.formats.TestImgFormat;
 import io.scif.util.FormatTools;
 
-import java.util.HashMap;
+import java.net.URI;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.scijava.io.location.AbstractLocation;
 import org.scijava.io.location.Location;
@@ -45,14 +51,14 @@ import org.scijava.io.location.Location;
  * will be read and interpreted by the {@link TestImgFormat}.
  * <p>
  * To create a {@link TestImgLocation} use the {@link Builder} as follows:
- * 
+ *
  * <pre>
  * TestImgLocation.Builder b = new Builder();
  * b.axes("X", "Y", "Z"); // set new axis names
  * b.lengths(100, 100, 3); // set new axis lengths
  * Location loc = b.build(); // build the final location
  * </pre>
- * 
+ *
  * @author Gabriel Einsdorf
  */
 public class TestImgLocation extends AbstractLocation {
@@ -60,9 +66,29 @@ public class TestImgLocation extends AbstractLocation {
 	public static Builder builder() {
 		return new Builder();
 	}
-	
+
 	public static TestImgLocation defaultTestImg() {
 		return new Builder().build();
+	}
+
+	/**
+	 * Creates a TestImgLocation with the values from the map set default values
+	 *
+	 * @param map the map containing the values
+	 */
+	public static TestImgLocation fromMap(final Map<String, Object> map) {
+		final TestImgLocation loc = defaultTestImg();
+		final Map<String, Object> metaData = loc.map;
+
+		// replace defaults with values from map
+		map.forEach((key, value) -> {
+			final Object replaced = metaData.computeIfPresent(key, (k, v) -> value);
+			if (replaced == null) {
+				throw new IllegalArgumentException("unknown key:" + key);
+			}
+		});
+
+		return loc;
 	}
 
 	public static class Builder {
@@ -191,8 +217,15 @@ public class TestImgLocation extends AbstractLocation {
 
 	private final Map<String, Object> map;
 
+	private static final String[] singleValueKeys = { "planarDims",
+		"interleavedDims", "thumbSizeX", "thumbSizeY", "pixelType", "indexed",
+		"falseColor", "little", "metadataComplete", "thumbnail", "orderCertain",
+		"lutLength", "scaleFactor", "images" };
+
+	private URI uri;
+
 	private TestImgLocation(final Builder builder) {
-		map = new HashMap<>();
+		map = new LinkedHashMap<>();
 
 		// Consistency checks
 		if (builder.lengths.length != builder.axes.length) {
@@ -251,5 +284,59 @@ public class TestImgLocation extends AbstractLocation {
 	@Override
 	public String getName() {
 		return (String) map.get(MetadataService.NAME_KEY) + ".scifioTestImg";
+	}
+
+	@Override
+	public URI getURI() {
+		if (this.uri == null) {
+			this.uri = URI.create(getKeyValueStrings());
+		}
+		return uri;
+	}
+
+	@SuppressWarnings("unchecked")
+	private String getKeyValueStrings() {
+		final StringBuilder b = new StringBuilder();
+		b.append("scifioTestImg://");
+		b.append(map.get(MetadataService.NAME_KEY));
+		final String regex = "\\[|\\]|\\s";
+
+		b.append("?");
+
+		final Stream<Entry<String, Object>> otherEntries = map.entrySet().stream()
+			.filter(e -> !e.getKey().equals(MetadataService.NAME_KEY));
+		otherEntries.forEach(e -> {
+			b.append(e.getKey());
+			b.append("=");
+			final Object val = e.getValue();
+			if (val instanceof String[]) {
+				b.append(Arrays.toString((String[]) val).replaceAll(regex, ""));
+			}
+			else if (val instanceof int[]) {
+				b.append(Arrays.toString((int[]) val).replaceAll(regex, ""));
+			}
+			else if (val instanceof long[]) {
+				b.append(Arrays.toString((long[]) val).replaceAll(regex, ""));
+			}
+			else if (val instanceof double[]) {
+				b.append(Arrays.toString((double[]) val).replaceAll(regex, ""));
+			}
+			else if (val instanceof List) {
+				b.append(val.toString().replaceAll(regex, ""));
+			}
+			else {
+				b.append(val.toString());
+			}
+			b.append("&");
+		});
+
+		// delete the last &
+		b.replace(b.length() - 1, b.length(), "");
+		return b.toString();
+	}
+
+	@Override
+	public String toString() {
+		return getURI().toString();
 	}
 }
