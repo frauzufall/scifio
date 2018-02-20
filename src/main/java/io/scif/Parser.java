@@ -170,7 +170,7 @@ public interface Parser extends HasFormat, HasSource, Groupable {
 	 * 'noPixels' flag is set, then only files that do not contain pixel data will
 	 * be returned.
 	 */
-	Location[] getUsedFiles(boolean noPixels);
+	Location[] getUsedLocations(boolean noPixels);
 
 	/** Returns an array of filenames needed to open the indicated image index. */
 	Location[] getImageUsedFiles(int imageIndex);
@@ -183,18 +183,18 @@ public interface Parser extends HasFormat, HasSource, Groupable {
 	Location[] getImageUsedFiles(int imageIndex, boolean noPixels);
 
 	/**
-	 * Returns an array of FileInfo objects representing the files needed to open
+	 * Returns an array of LocationInfo objects representing the Locations needed to open
 	 * this dataset. If the 'noPixels' flag is set, then only files that do not
 	 * contain pixel data will be returned.
 	 */
-	FileInfo[] getAdvancedUsedFiles(boolean noPixels);
+	LocationInfo[] getAdvancedUsedLocations(boolean noPixels);
 
 	/**
-	 * Returns an array of FileInfo objects representing the files needed to open
+	 * Returns an array of LocationInfo objects representing the Locations needed to open
 	 * the current series. If the 'noPixels' flag is set, then only files that do
 	 * not contain pixel data will be returned.
 	 */
-	FileInfo[] getAdvancedImageUsedFiles(int imageIndex, boolean noPixels);
+	LocationInfo[] getAdvancedImageUsedLocations(int imageIndex, boolean noPixels);
 
 	/**
 	 * Returns a list of MetadataLevel options for determining the granularity of

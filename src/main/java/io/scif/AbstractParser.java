@@ -115,11 +115,11 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 
 	@Override
 	public Location[] getUsedFiles() {
-		return getUsedFiles(false);
+		return getUsedLocations(false);
 	}
 
 	@Override
-	public Location[] getUsedFiles(final boolean noPixels) {
+	public Location[] getUsedLocations(final boolean noPixels) {
 		final Set<Location> files = new HashSet<>();
 		for (int i = 0; i < metadata.getImageCount(); i++) {
 			final Location[] s = getImageUsedFiles(i, noPixels);
@@ -147,19 +147,19 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 	}
 
 	@Override
-	public FileInfo[] getAdvancedUsedFiles(final boolean noPixels) {
-		final Location[] files = getUsedFiles(noPixels);
+	public LocationInfo[] getAdvancedUsedLocations(final boolean noPixels) {
+		final Location[] files = getUsedLocations(noPixels);
 		if (files == null) return null;
-		return getFileInfo(files);
+		return getLocationInfo(files);
 	}
 
 	@Override
-	public FileInfo[] getAdvancedImageUsedFiles(final int imageIndex,
+	public LocationInfo[] getAdvancedImageUsedLocations(final int imageIndex,
 		final boolean noPixels)
 	{
 		final Location[] files = getImageUsedFiles(imageIndex, noPixels);
 		if (files == null) return null;
-		return getFileInfo(files);
+		return getLocationInfo(files);
 	}
 
 	@Override
@@ -284,16 +284,14 @@ public abstract class AbstractParser<M extends TypedMetadata> extends
 		close();
 	}
 
-	/* Builds a FileInfo array around the provided array of file names */
-	private FileInfo[] getFileInfo(final Location[] files) {
-		final FileInfo[] infos = new FileInfo[files.length];
+	/* Builds a LocationInfo array around the provided array of locations*/
+	private LocationInfo[] getLocationInfo(final Location[] locations) {
+		final LocationInfo[] infos = new LocationInfo[locations.length];
 		for (int i = 0; i < infos.length; i++) {
-			infos[i] = new FileInfo();
-			infos[i].filename = files[i].getName();
+			infos[i] = new LocationInfo();
+			infos[i].locationName = locations[i].getName();
 			infos[i].reader = getFormat().getReaderClass();
-			// FIXME is this logic correct?
-			infos[i].usedToInitialize = files[i].getName().endsWith(
-				getSourceLocation().getName());
+			infos[i].usedToInitialize = locations[i].equals(getSourceLocation());
 		}
 		return infos;
 	}
