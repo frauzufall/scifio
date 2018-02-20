@@ -186,7 +186,6 @@ public class TIFFJAIFormat extends AbstractFormat {
 				throw new FormatException("Unsupported Location type" + location
 					.getClass().getName());
 			}
-			// FIXME use caching for the RandomAccessFile?
 
 			r.setVar("tiff", "tiff");
 			r.setVar("param", null);

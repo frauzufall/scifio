@@ -74,8 +74,6 @@ public class PackbitsCodec extends AbstractCodec {
 		// Adapted from the TIFF 6.0 specification, page 42.
 		final ByteArrayOutputStream output = new ByteArrayOutputStream(1024);
 		int nread = 0;
-		// FIXME: Need to add buffering here
-		// final BufferedInputStream s = new BufferedInputStream(in.in(), 262144);
 		while (output.size() < options.maxBytes) {
 			final byte n = (byte) (in.read() & 0xff);
 			nread++;

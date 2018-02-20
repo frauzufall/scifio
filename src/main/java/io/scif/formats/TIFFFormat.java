@@ -457,9 +457,6 @@ public class TIFFFormat extends AbstractFormat {
 
 			// check for another file with the same name
 			if (config.groupableIsGroupFiles()) {
-				// FIXME check if this logic is still consistent
-//				final Location currentFile = new Location(getContext(), getSource()
-//					.getFileName()).getAbsoluteFile();
 				final BrowsableLocation currentFile = asBrowsableLocation(getSource());
 				final String currentName = currentFile.getName();
 				final BrowsableLocation directory = currentFile.parent();
@@ -1453,10 +1450,8 @@ public class TIFFFormat extends AbstractFormat {
 						.get()))
 					{
 						if (tmp.length() == 0) {
-							synchronized (this) { // FIXME this seems superfluous
-								// write TIFF header
-								tiffSaver.writeHeader();
-							}
+							// write TIFF header
+							tiffSaver.writeHeader();
 						}
 					}
 				}

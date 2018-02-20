@@ -596,8 +596,8 @@ public class TiffSaver extends AbstractContextual {
 				writeIFDValue(extraHandle, ifdBytes + fp, key.intValue(), value);
 			}
 
-			if (bigTiff) out.seek(out.offset()); // FIXME this is suspicious, it
-																						// should not do anything
+//			if (bigTiff) out.seek(out.offset());
+
 			writeIntValue(out, nextOffset);
 			final int ifdLen = (int) extraHandle.offset();
 			extraHandle.seek(0l);
@@ -618,7 +618,7 @@ public class TiffSaver extends AbstractContextual {
 		IOException
 	{
 		extraOut.setLittleEndian(isLittleEndian());
-		
+
 		// convert singleton objects into arrays, for simplicity
 		if (value instanceof Short) {
 			value = new short[] { ((Short) value).shortValue() };
