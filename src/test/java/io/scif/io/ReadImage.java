@@ -91,16 +91,16 @@ public class ReadImage {
 		// read all arguments using FloatType with PlanarImg
 		System.out.println();
 		System.out.println("== FLOAT TYPE, DEFAULT CONTAINER ==");
-		for (final String arg : args) {
-			final ImgPlus<FloatType> img = IO.openFloat(arg);
+		for (final Location id : ids) {
+			final ImgPlus<FloatType> img = IO.openFloatImgs(id).get(0);
 			reportInformation(img);
 		}
 
 		// read all arguments using FloatType with PlanarImg
 		System.out.println();
 		System.out.println("== DOUBLE TYPE, DEFAULT CONTAINER ==");
-		for (final String arg : args) {
-			final ImgPlus<DoubleType> img = IO.openDouble(arg);
+		for (final Location id : ids) {
+			final ImgPlus<DoubleType> img = IO.openDoubleImgs(id).get(0);
 			reportInformation(img);
 		}
 	}
