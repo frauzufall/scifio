@@ -186,12 +186,12 @@ public class MicromanagerFormat extends AbstractFormat {
 		{
 			try {
 				final Location metaFile = location.sibling(METADATA);
-				boolean validMetaData = isFormat(handle);
+				final boolean validMetaData = isFormat(handle);
 				if (!validMetaData) return false;
 				final io.scif.Checker checker;
 				checker = formatService.getFormatFromClass(MinimalTIFFFormat.class)
 					.createChecker();
-				boolean validTIFF = checker.isFormat(handle);
+				final boolean validTIFF = checker.isFormat(handle);
 				return validTIFF && isFormat(metaFile, config);
 			}
 			catch (final FormatException | IOException e) {
@@ -765,6 +765,9 @@ public class MicromanagerFormat extends AbstractFormat {
 		@Parameter
 		private FormatService formatService;
 
+		@Parameter
+		private DataHandleService dataHandleService;
+
 		/** Helper reader for TIFF files. */
 		private MinimalTIFFFormat.Reader<?> tiffReader;
 
@@ -793,11 +796,10 @@ public class MicromanagerFormat extends AbstractFormat {
 			FormatTools.checkPlaneForReading(meta, imageIndex, planeIndex, buf.length,
 				planeMin, planeMax);
 
-			final Location file = meta.getPositions().get(imageIndex).getFile(meta,
-				imageIndex, planeIndex);
+			final Location file = meta.getPositions().get(imageIndex).getLocation(
+				meta, imageIndex, planeIndex);
 
-			// FIXME check for existence of file?
-			if (file != null) {
+			if (file != null && dataHandleService.supports(file)) {
 				tiffReader.setSource(file, config);
 				return tiffReader.openPlane(imageIndex, 0, plane, planeMin, planeMax);
 			}
@@ -840,7 +842,7 @@ public class MicromanagerFormat extends AbstractFormat {
 		private void setupReader(final int imageIndex) {
 			try {
 				final Location file = getMetadata().getPositions().get(imageIndex)
-					.getFile(getMetadata(), imageIndex, 0);
+					.getLocation(getMetadata(), imageIndex, 0);
 
 				if (tiffReader == null) {
 					tiffReader = (MinimalTIFFFormat.Reader<?>) formatService
@@ -908,7 +910,7 @@ public class MicromanagerFormat extends AbstractFormat {
 
 		public String cameraMode;
 
-		public Location getFile(final Metadata meta, final int imageIndex,
+		public Location getLocation(final Metadata meta, final int imageIndex,
 			final long planeIndex)
 		{
 			final long[] zct = FormatTools.rasterToPosition(imageIndex, planeIndex,
