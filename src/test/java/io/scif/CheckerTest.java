@@ -149,9 +149,7 @@ public class CheckerTest {
 
 		assertNotNull(format);
 
-		if (format != null) {
-			assertEquals(c.getFormat().getCheckerClass(), c.getClass());
-		}
+		assertEquals(c.getFormat().getCheckerClass(), c.getClass());
 	}
 
 	@After
