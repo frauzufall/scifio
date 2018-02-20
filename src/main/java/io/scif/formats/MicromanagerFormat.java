@@ -212,10 +212,11 @@ public class MicromanagerFormat extends AbstractFormat {
 			// FIXME add more checks here
 
 			// ensure we can look for neighbors
-			return handle.get() instanceof BrowsableLocation;
+			return location instanceof BrowsableLocation;
 		}
 
 		private boolean validMetadataFile(final Location location) {
+			if (location == null) return false;
 			final String name = location.getName();
 			return name.equals(METADATA) || name.endsWith(File.separator +
 				METADATA) || name.equals(XML) || name.endsWith(File.separator + XML);
@@ -260,7 +261,7 @@ public class MicromanagerFormat extends AbstractFormat {
 			final List<Position> positions = new ArrayList<>();
 			for (int pos = 0; pos < jsonData.length; pos++) {
 				final Position p = new Position();
-//				p.metadataFile = "Position #" + (pos + 1);
+//				p.metadataFile = "Position #" + (pos + 1); // FIXME what to put here?
 				positions.add(p);
 				parsePosition(jsonData[pos], source, pos);
 			}
