@@ -40,6 +40,7 @@ import io.scif.img.ImgSaver;
 import io.scif.img.SCIFIOImgPlus;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +52,7 @@ import net.imagej.axis.CalibratedAxis;
 import net.imglib2.exception.IncompatibleTypeException;
 
 import org.scijava.io.location.Location;
+import org.scijava.io.location.LocationService;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
@@ -74,7 +76,17 @@ public class DefaultDatasetIOService extends AbstractService implements
 	private DatasetService datasetService;
 
 	@Parameter
+	private LocationService locationService;
+
+	@Parameter
 	private LogService log;
+
+	@Parameter
+	private LocationService dataHandleService;
+
+	public boolean canOpen(final String source) throws URISyntaxException {
+		return canOpen(locationService.resolve(source));
+	}
 
 	@Override
 	public boolean canOpen(final Location source) {
@@ -208,8 +220,14 @@ public class DefaultDatasetIOService extends AbstractService implements
 			// no way to revert
 			throw new IOException("Cannot revert image of unknown origin");
 		}
-		// FIXME: this is only correct if the dataset is stored locally
-		final Dataset revertedDataset = open(new FileLocation(source));
+		Location loc;
+		try {
+			loc = dataHandleService.resolve(source);
+		}
+		catch (final URISyntaxException exc) {
+			throw new IOException("Cannot revert image with invalid origin", exc);
+		}
+		final Dataset revertedDataset = open(loc);
 		revertedDataset.copyInto(dataset);
 	}
 

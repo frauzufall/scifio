@@ -64,7 +64,6 @@ import net.imglib2.type.numeric.RealType;
 
 import org.scijava.Context;
 import org.scijava.app.StatusService;
-import org.scijava.io.location.FileLocation;
 import org.scijava.io.location.Location;
 import org.scijava.plugin.Parameter;
 
@@ -351,7 +350,7 @@ public class ImgOpener extends AbstractImgIOComponent {
 			final SCIFIOImgPlus<T> imgPlus = makeImgPlus(img, reader, i(imageIndex));
 
 			final Location id = reader.getCurrentFile();
-			imgPlus.setSource(id.getName());
+			imgPlus.setSource(id.getURI().toString());
 			imgPlus.initializeColorTables(i(reader.getPlaneCount(i(imageIndex))));
 
 			if (!config.imgOpenerIsComputeMinMax()) {
