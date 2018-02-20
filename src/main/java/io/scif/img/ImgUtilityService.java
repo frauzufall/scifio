@@ -53,18 +53,6 @@ import org.scijava.io.location.Location;
  */
 public interface ImgUtilityService extends SCIFIOService {
 
-	/**
-	 * Downloads the given URL and caches it to a temporary file, which is deleted
-	 * upon JVM shutdown. This is useful in conjuction with {@link ImgOpener} to
-	 * open a URL as an {@link Img}.
-	 * <p>
-	 * Data compressed with zip or gzip is supported. In the case of zip, the
-	 * first file in the archive is cached.
-	 * </p>
-	 */
-	// FIXME: Remove this?
-	String cacheId(final String urlPath) throws ImgIOException;
-
 	/** Obtains planar access instance backing the given img, if any. */
 	PlanarAccess<ArrayDataAccess<?>> getPlanarAccess(final ImgPlus<?> img);
 
