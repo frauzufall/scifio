@@ -245,8 +245,7 @@ public abstract class AbstractWriter<M extends TypedMetadata> extends
 		if (metadata == null) throw new FormatException(
 			"Can not set Destination without setting Metadata first.");
 
-		// FIXME
-		// set metadata.datasetName here when RAOS has better id handling
+		getMetadata().setDatasetName(out.get().getName());
 
 		this.out = out;
 		fps = config.writerGetFramesPerSecond();
