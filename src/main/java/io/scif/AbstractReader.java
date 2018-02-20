@@ -37,7 +37,6 @@ import java.io.IOException;
 
 import net.imagej.axis.Axes;
 
-import org.scijava.io.handle.AbstractHigherOrderHandle;
 import org.scijava.io.handle.DataHandle;
 import org.scijava.io.handle.DataHandleService;
 import org.scijava.io.location.Location;

@@ -4,14 +4,12 @@ package io.scif.io;
 import static org.junit.Assert.assertEquals;
 
 import io.scif.MetadataService;
-import io.scif.img.IO;
 import io.scif.io.location.TestImgLocationResolver;
 
 import java.net.URISyntaxException;
 
 import org.junit.Test;
 import org.scijava.Context;
-import org.scijava.io.location.Location;
 import org.scijava.io.location.LocationService;
 
 /**

@@ -40,7 +40,6 @@ import io.scif.io.location.TestImgLocation;
 import java.io.IOException;
 
 import org.junit.Test;
-import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**

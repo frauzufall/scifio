@@ -41,7 +41,6 @@ import net.imagej.axis.Axes;
 import net.imglib2.display.ColorTable;
 
 import org.junit.Test;
-import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**

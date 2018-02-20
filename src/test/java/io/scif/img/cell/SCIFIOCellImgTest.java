@@ -37,8 +37,6 @@ import io.scif.img.SCIFIOImgPlus;
 import io.scif.io.location.TestImgLocation;
 
 import org.junit.Test;
-import org.scijava.io.location.DummyLocation;
-import org.scijava.io.location.Location;
 
 /**
  * Tests for the {@link SCIFIOCellImg} and related classes.

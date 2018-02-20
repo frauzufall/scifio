@@ -43,7 +43,6 @@ import net.imagej.axis.Axes;
 import net.imagej.axis.AxisType;
 
 import org.junit.Test;
-import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**

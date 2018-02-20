@@ -57,7 +57,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.scijava.Context;
-import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 
 /**

@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.scijava.io.location.AbstractLocation;
 import org.scijava.io.location.Location;

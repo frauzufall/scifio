@@ -45,7 +45,6 @@ import net.imagej.axis.Axes;
 import org.junit.After;
 import org.junit.Test;
 import org.scijava.Context;
-import org.scijava.io.location.DummyLocation;
 import org.scijava.io.location.Location;
 import org.scijava.plugin.PluginInfo;
 
