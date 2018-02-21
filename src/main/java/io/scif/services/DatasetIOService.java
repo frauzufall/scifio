@@ -54,6 +54,12 @@ public interface DatasetIOService extends SCIFIOService {
 	boolean canOpen(Location source);
 
 	/**
+	 * Determines whether the given source can be opened as a {@link Dataset}
+	 * using the {@link #open(Location)} method.
+	 */
+	boolean canOpen(String source);
+
+	/**
 	 * Determines whether the given destination can be used to save a
 	 * {@link Dataset} using the {@link #save(Dataset, Location)} method.
 	 */
@@ -65,20 +71,35 @@ public interface DatasetIOService extends SCIFIOService {
 	Dataset open(Location source) throws IOException;
 
 	/**
+	 * @see #open(Location)
+	 */
+	Dataset open(String source) throws IOException;
+
+	/**
 	 * As {@link #open(Location)}, with the given
 	 * {@code io.scif.config.SCIFIOConfig}.
 	 */
 	Dataset open(Location source, SCIFIOConfig config) throws IOException;
 
 	/**
-	 * Load all the datasets from a given source (such as a file on disk). (Useful
-	 * for files containing image series)
+	 * Loads a dataset from a source (such as a file on disk).
+	 */
+	Dataset open(String source, SCIFIOConfig config) throws IOException;
+
+	/**
+	 * Load all the datasets from a given source. (Useful for files containing
+	 * image series)
 	 *
-	 * @param source path on the disk
+	 * @param source the source location of the images
 	 * @return a list of all datasets contained by the image file.
 	 * @throws IOException
 	 */
 	List<Dataset> openAll(Location source) throws IOException;
+
+	/**
+	 * @see #openAll(Location)
+	 */
+	List<Dataset> openAll(String source) throws IOException;
 
 	/**
 	 * As {@link #openAll(Location)}, with a given
@@ -91,6 +112,11 @@ public interface DatasetIOService extends SCIFIOService {
 	 */
 	List<Dataset> openAll(Location source, SCIFIOConfig config)
 		throws IOException;
+
+	/**
+	 * @see #openAll(Location)
+	 */
+	List<Dataset> openAll(String source, SCIFIOConfig config) throws IOException;
 
 	/**
 	 * Reverts the given dataset to its original source.

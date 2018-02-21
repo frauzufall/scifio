@@ -84,10 +84,6 @@ public class DefaultDatasetIOService extends AbstractService implements
 	@Parameter
 	private LocationService dataHandleService;
 
-	public boolean canOpen(final String source) throws URISyntaxException {
-		return canOpen(locationService.resolve(source));
-	}
-
 	@Override
 	public boolean canOpen(final Location source) {
 		try {
@@ -98,6 +94,16 @@ public class DefaultDatasetIOService extends AbstractService implements
 			log.error(exc);
 		}
 		return false;
+	}
+
+	@Override
+	public boolean canOpen(final String source) {
+		try {
+			return canOpen(locationService.resolve(source));
+		}
+		catch (URISyntaxException exc) {
+			return false;
+		}
 	}
 
 	@Override
@@ -120,6 +126,11 @@ public class DefaultDatasetIOService extends AbstractService implements
 		// prefer planar array structure, for ImageJ1 and ImgSaver compatibility
 		config.imgOpenerSetImgModes(ImgMode.PLANAR);
 		return open(source, config);
+	}
+
+	@Override
+	public Dataset open(String source) throws IOException {
+		return open(resolve(source));
 	}
 
 	@Override
@@ -149,12 +160,22 @@ public class DefaultDatasetIOService extends AbstractService implements
 	}
 
 	@Override
+	public Dataset open(String source, SCIFIOConfig config) throws IOException {
+		return open(resolve(source), config);
+	}
+
+	@Override
 	public List<net.imagej.Dataset> openAll(final Location source)
 		throws IOException
 	{
 		final SCIFIOConfig config = new SCIFIOConfig();
 		config.imgOpenerSetImgModes(ImgMode.PLANAR);
 		return openAll(source, config);
+	}
+
+	@Override
+	public List<Dataset> openAll(String source) throws IOException {
+		return openAll(resolve(source));
 	}
 
 	@Override
@@ -184,6 +205,13 @@ public class DefaultDatasetIOService extends AbstractService implements
 			throw new IOException(exc);
 		}
 		return datasetList;
+	}
+
+	@Override
+	public List<Dataset> openAll(String source, SCIFIOConfig config)
+		throws IOException
+	{
+		return openAll(resolve(source), config);
 	}
 
 	@Override
@@ -263,4 +291,12 @@ public class DefaultDatasetIOService extends AbstractService implements
 		dataset.setRGBMerged(rgbMerged);
 	}
 
+	private Location resolve(String source) throws IOException {
+		try {
+			return locationService.resolve(source);
+		}
+		catch (URISyntaxException exc) {
+			throw new IOException("Invalid source string: " + source);
+		}
+	}
 }
