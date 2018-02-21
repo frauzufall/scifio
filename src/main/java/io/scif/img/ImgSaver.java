@@ -74,7 +74,6 @@ import net.imglib2.type.numeric.real.FloatType;
 
 import org.scijava.Context;
 import org.scijava.app.StatusService;
-import org.scijava.io.location.FileLocation;
 import org.scijava.io.location.Location;
 import org.scijava.plugin.Parameter;
 import org.scijava.util.Bytes;
@@ -171,77 +170,6 @@ public class ImgSaver extends AbstractImgIOComponent {
 		IncompatibleTypeException
 	{
 		return writeImg(id, null, img, imageIndex, config);
-	}
-
-	/**
-	 * {@link Writer} and {@link Img} provided
-	 *
-	 * @param w
-	 * @param img
-	 * @throws ImgIOException
-	 * @throws IncompatibleTypeException
-	 */
-	public void saveImg(final Writer w, final Img<?> img) throws ImgIOException,
-		IncompatibleTypeException
-	{
-		saveImg(w, img, null);
-	}
-
-	// TODO IFormatHandler needs to be promoted to be able to get the current
-	// file, to get its full path, to provide the ImgPluSCIFIOImgPlusending
-	// that,
-	// these two IFormatWriter methods are not guaranteed to be
-	// useful
-	/**
-	 * {@link Writer} provided. {@link ImgPlus} provided, or wrapped provided
-	 * {@link Img}.
-	 *
-	 * @param w
-	 * @param img
-	 * @throws ImgIOException
-	 * @throws IncompatibleTypeException
-	 */
-	public void saveImg(final Writer w, final SCIFIOImgPlus<?> img,
-		final int imageIndex) throws ImgIOException, IncompatibleTypeException
-	{
-		saveImg(w, img, imageIndex, null);
-	}
-
-	/**
-	 * As {@link #saveImg(Writer, Img)}, with configuration options.
-	 *
-	 * @param w
-	 * @param img
-	 * @param config Configuration information to use for this write.
-	 * @throws ImgIOException
-	 * @throws IncompatibleTypeException
-	 */
-	public void saveImg(final Writer w, final Img<?> img,
-		final SCIFIOConfig config) throws ImgIOException, IncompatibleTypeException
-	{
-		saveImg(w, utils().makeSCIFIOImgPlus(img), 0, config);
-	}
-
-	// TODO IFormatHandler needs to be promoted to be able to get the current
-	// file, to get its full path, to provide the ImgPlus
-	// pending that, these two IFormatWriter methods are not guaranteed to be
-	// useful
-	/**
-	 * As {@link #saveImg(Writer, SCIFIOImgPlus, int)}, with configuration
-	 * options.
-	 *
-	 * @param w
-	 * @param img
-	 * @param config Configuration information to use for this write.
-	 * @throws ImgIOException
-	 * @throws IncompatibleTypeException
-	 */
-	public void saveImg(final Writer w, final SCIFIOImgPlus<?> img,
-		final int imageIndex, final SCIFIOConfig config) throws ImgIOException,
-		IncompatibleTypeException
-	{
-		// FIXME: this is not correct.
-		writeImg(new FileLocation(img.getSource()), w, img, imageIndex, config);
 	}
 
 	// -- Utility methods --
