@@ -55,7 +55,7 @@ public class TIFFFormatTest {
 	@Test
 	public void testTiffWithoutMetadata() {
 		final URL tiffWithoutMetadata = getClass().getResource("tiny-10x10x3.tif");
-		final ImgPlus<?> img = IO.openImgs(new FileLocation(tiffWithoutMetadata
+		final ImgPlus<?> img = IO.open(new FileLocation(tiffWithoutMetadata
 			.getPath())).get(0);
 
 		assertEquals(3, img.numDimensions());

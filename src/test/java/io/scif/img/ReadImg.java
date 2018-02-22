@@ -56,7 +56,7 @@ public class ReadImg {
 	}
 
 	private static void readImg(final File file) throws Exception {
-		final ImgPlus<?> img = IO.openImgs(new FileLocation(file.getAbsolutePath()))
+		final ImgPlus<?> img = IO.open(new FileLocation(file.getAbsolutePath()))
 			.get(0);
 
 		System.out.println("file = " + file);
