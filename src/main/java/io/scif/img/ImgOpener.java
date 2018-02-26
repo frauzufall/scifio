@@ -45,6 +45,7 @@ import io.scif.services.InitializeService;
 import io.scif.util.FormatTools;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -350,7 +351,8 @@ public class ImgOpener extends AbstractImgIOComponent {
 			final SCIFIOImgPlus<T> imgPlus = makeImgPlus(img, reader, i(imageIndex));
 
 			final Location id = reader.getCurrentFile();
-			imgPlus.setSource(id.getURI().toString());
+			final URI uri = id.getURI();
+			imgPlus.setSource(uri == null ? null : uri.toString());
 			imgPlus.initializeColorTables(i(reader.getPlaneCount(i(imageIndex))));
 
 			if (!config.imgOpenerIsComputeMinMax()) {
